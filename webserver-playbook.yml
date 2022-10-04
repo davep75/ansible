@@ -1,0 +1,35 @@
+---
+- hosts: webserver
+  tasks:
+  - name: ensure Apache is installed
+    apt: 
+      name: ['apache2']
+      state: present
+  - name: write Apache config file
+    copy: src=000-default.conf dest=/etc/httpd/conf
+    notify:
+    - restart apache2
+  - name: disable pmp_event on apache
+    shell: "a2dismod mpm_event"
+    notify:
+    - restart apache2
+  - name: enable cgi on apache
+    shell: "a2enmod mpm_prefork cgi"
+    notify:
+    - restart apache2
+  - name: enable and start Apache 
+    service: name=apache2 state=started enabled=yes
+  - name: install pymysql module
+    pip: name=pymysql executable=pip3
+  - name: add a test directory
+    file: 
+      path: /var/www/test/
+      state: directory
+  - name: add index file
+    copy: src=index.py dest=/var/www/test/index.py mode=755
+    notify:
+    - restart apache2
+
+  handlers:
+  - name: restart apache2
+    service: name=apache2 state=restarted

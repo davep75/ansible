@@ -1,0 +1,7 @@
+---
+- hosts: mart
+  tasks:
+    - name: Run our original Ansible command
+      debug: msg="ansible is fun"
+    - name: test connectivity
+      ping:

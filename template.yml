@@ -1,0 +1,10 @@
+---
+ - name: Modify template.txt using templates (hence the name)
+#   become: true
+   hosts: 100.64.186.230
+   gather_facts: true
+   tasks:
+     - name: Copy /home/podolske/template.txt 
+       template:
+         dest: /home/podolske/template.txt
+         src: template.j2

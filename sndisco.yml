@@ -1,0 +1,30 @@
+---
+- name: create discovery account
+  hosts: 100.64.254.55
+  tasks:
+  - name: ensure sndisco group exists
+    group:
+     name: sndisco
+     gid: 19999
+     state: present
+  - name: ensure sndisco user exists
+    user:
+     name: sndisco
+     password: '$1$aiPGmDDQ$fGEjg2KQEnwpB8PDLvAl6/'
+     shell: /bin/bash
+     uid: 199
+     group: sndisco
+  - name: ensure sndisco sudoer rights
+    file:
+      path: /etc/sudoers.d/sndiscovery
+      state: absent
+  - blockinfile:
+      path: /etc/sudoers.d/sndiscovery
+      mode: '0440'
+      create: yes
+      block: |
+       sndisco ALL=(root) /usr/sbin/dmidecode
+       sndisco ALL=(root) /usr/sbin/lsof
+       sndisco ALL=(root) /sbin/fdisk -l
+       sndisco ALL=(root) /sbin/dmsetup ls
+       sndisco ALL=(root) /sbin/multipath -ll

@@ -1,0 +1,11 @@
+---
+- hosts: coresite
+  vars:
+    mysql_root_password: s1rdhn
+  tasks:
+    - name: create account for Podolske (Ubuntu)
+      shell: /usr/sbin/adduser  --uid 18480 --gid 100 --gecos Podolske --disabled-password podolske
+      when: ansible_facts['distribution'] == "Ubuntu"
+    - name: create account for Podolske (Rocky)
+      shell: /usr/sbin/adduser -m -u 18480 -g 10 podolske
+      when: ansible_facts['distribution'] == "Rocky"

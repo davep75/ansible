@@ -1,0 +1,7 @@
+---
+- hosts: mysql
+  vars:
+    mysql_root_password: s1rdhn
+  tasks:
+    - name: backup mysql 
+      shell: mysqldump -a -u root -p{{ mysql_root_password }} cmdb > /home/podolske/cmdb/cmdb.test.dump

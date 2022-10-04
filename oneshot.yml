@@ -1,0 +1,21 @@
+---
+#- name: test new knowledge of ansible
+#  add_host:
+#    name: va32ldave02.mot.com
+#    ansible_host:  10.62.176.27
+#- name: add to sudoers
+#  hosts: 10.62.176.27
+#  tasks: 
+#  - name: append 90-cloud-init-users file
+#    copy:
+#      content: "podolske ALL=(ALL) NOPASSWD: ALL"
+#      dest: /etc/sudoers.d/80-cloud-init-users
+#      force: yes
+#      mode: 0440
+- name: example play
+  hosts: all
+  gather_facts: true
+  tasks:
+   - name: which host are we
+     debug:
+       var: inventory_hostname

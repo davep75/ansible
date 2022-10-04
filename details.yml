@@ -1,0 +1,13 @@
+---
+- name: Upgrade Systems
+  hosts: all
+  become: false
+  gather_facts: true
+  tasks:
+    - name: Print Host Details
+      debug:
+        msg: "{{ item }}"
+      loop:
+        - "{{ ansible_hostname }}"
+        - "{{ ansible_distribution }}"
+        - "{{ ansible_distribution_version }}"

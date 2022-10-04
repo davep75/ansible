@@ -1,0 +1,17 @@
+---
+ - name: Restart chronyd after changing /etc/chrony/chrony.conf
+#   become: true
+   hosts: 100.64.186.230
+   gather_facts: true
+   tasks:
+     - name: Edit config
+       lineinfile:
+         path: /etc/chrony/chrony.conf
+         insertafter: '#pool'
+         line: 'server ntp1.mot.com'
+       notify: restart_chronyd
+   handlers:
+     - name: restart_chronyd
+       service:
+         name: chronyd
+         state: restarted

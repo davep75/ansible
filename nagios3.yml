@@ -1,0 +1,35 @@
+---
+- name: edit nrpe.cfg
+  hosts: 100.64.186.230
+#  hosts: 100.64.254.55
+#  become: true
+  gather_facts: true
+    
+  vars:
+      nagios_server: 100.64.5.212,100.65.184.1
+
+  tasks:
+    - name: Configure allowed IP in nrpe configuration file
+      lineinfile: 
+        path: /etc/nagios/nrpe.cfg
+        regexp: dont_blame_nrpe=0
+        line: dont_blame_nrpe=1
+
+# - name: Start nrpe service and enable it on startup
+#   service:
+#       name=nrpe
+#	   state=restarted
+#	   enabled=yes
+#
+    - name: Configure nagios server IP in nrpe configuration file
+      lineinfile:
+        dest: /etc/nagios/nrpe.cfg
+        regexp: allowed_hosts=
+        line: allowed_hosts=127.0.0.1,{{nagios_server}},100.65.176.70
+      notify: restart_nrpe
+
+  handlers:
+    - name: restart_nrpe
+      service:
+        name: nrpe
+        state: restarted

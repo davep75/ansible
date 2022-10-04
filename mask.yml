@@ -1,0 +1,14 @@
+---
+- name: Manage masking of Nagios
+  hosts: 100.64.186.230
+#  become: true
+  gather_facts: false
+  tasks:
+    - name: Collect service list
+      service_facts:
+    - name: Mask Nagios
+      systemd:
+        name: nrpe
+        masked: true
+        state: stopped
+      when: "'nrpe.service' in ansible_facts.services"

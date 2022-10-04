@@ -1,0 +1,21 @@
+---
+- name: test yaml
+  hosts: ilmldave01.mot.com
+  tasks: 
+#  - name: create root.bashrc file
+#    copy:
+#      content: "export PS1='$HOSTNAME:${PWD}# '"
+#      dest: /home/podolske/root.bashrc
+#      force: no
+#      mode: 0444
+#  - name: add to root.bashrc
+    blockinfile:
+      path: /home/podolske/root.bashrc
+      create: yes
+      owner: podolske
+      mode: 0755
+      block: |
+        export PS1='$HOSTNAME:${PWD}# '
+        set -o vi
+        unalias ls
+      

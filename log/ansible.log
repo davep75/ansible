@@ -1,0 +1,19 @@
+2022-09-02 13:59:36,119 p=21671 u=podolske n=ansible | PLAY [mysql] ***********************************************************************************************
+2022-09-02 13:59:36,136 p=21671 u=podolske n=ansible | TASK [Gathering Facts] *************************************************************************************
+2022-09-02 13:59:38,413 p=21671 u=podolske n=ansible | ok: [100.64.254.55]
+2022-09-02 13:59:38,427 p=21671 u=podolske n=ansible | TASK [install mysql and python-mysqldb] ********************************************************************
+2022-09-02 13:59:42,060 p=21671 u=podolske n=ansible | ok: [100.64.254.55]
+2022-09-02 13:59:42,079 p=21671 u=podolske n=ansible | TASK [start MySQL service] *********************************************************************************
+2022-09-02 13:59:45,966 p=21671 u=podolske n=ansible | changed: [100.64.254.55]
+2022-09-02 13:59:45,981 p=21671 u=podolske n=ansible | TASK [update MySQL root password] **************************************************************************
+2022-09-02 13:59:47,366 p=21671 u=podolske n=ansible | [WARNING]: Module did not set no_log for update_password
+
+2022-09-02 13:59:47,367 p=21671 u=podolske n=ansible | changed: [100.64.254.55]
+2022-09-02 13:59:47,384 p=21671 u=podolske n=ansible | TASK [create new MySQL database] ***************************************************************************
+2022-09-02 13:59:48,469 p=21671 u=podolske n=ansible | ok: [100.64.254.55]
+2022-09-02 13:59:48,484 p=21671 u=podolske n=ansible | TASK [add sample data to MySQL database] *******************************************************************
+2022-09-02 13:59:50,357 p=21671 u=podolske n=ansible | ok: [100.64.254.55]
+2022-09-02 13:59:50,372 p=21671 u=podolske n=ansible | TASK [insert sample data to MySQL database] ****************************************************************
+2022-09-02 13:59:51,354 p=21671 u=podolske n=ansible | changed: [100.64.254.55]
+2022-09-02 13:59:51,358 p=21671 u=podolske n=ansible | PLAY RECAP *************************************************************************************************
+2022-09-02 13:59:51,358 p=21671 u=podolske n=ansible | 100.64.254.55              : ok=7    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   

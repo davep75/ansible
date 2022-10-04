@@ -1,0 +1,38 @@
+---
+   hosts: 100.64.186.230
+   gather_facts: true
+    
+   vars:
+      nagios_server: 100.64.5.212,100.65.184.1
+
+   tasks:
+#      debug:  var=ansible_facts
+#        msg: "Os is {{  distribution }}"
+#      when: ansible_facts['distribution'] == "Ubuntu"
+
+#  - name: Install epel-release repository
+#    yum: name=epel-release state=present
+   
+#  - name: Install nrpe, nagios-plugins-all
+#    yum: name=nrpe state=present
+
+#  - name: Install nagios-plugins-all
+#    yum: name=nagios-plugins-all state=present
+
+ - name: Configure nagios server IP in nrpe configuration file
+   lineinfile: 
+      dest: /etc/nagios/nrpe.cfg
+      regexp: allowed_hosts=
+      line: allowed_hosts=127.0.0.1,{{nagios_server}},100.65.176.70 
+
+ - name: Configure allow arguments in nrpe configuration file
+   lineinfile: 
+      dest: /etc/nagios/nrpe.cfg
+      regexp: dont_blame_nrpe=0
+      line: dont_blame_nrpe=1
+
+# - name: Start nrpe service and enable it on startup
+#   service:
+#       name=nrpe
+#	   state=restarted
+#	   enabled=yes

@@ -1,0 +1,19 @@
+---
+- name: Manage the /home/podolske/afile file
+#  become: true
+  hosts: mart
+  gather_facts: true
+  tasks:
+    - name: populate file with specific entries
+      copy:
+        mode: 0444
+        dest: /home/podolske/afile
+        content: |
+          This system is managed by Ansible
+          The system name is {{ ansible_hostname }}
+          The IP address is {{ ansible_default_ipv4.address }}
+    - name: comment line with specific entries
+      replace:
+        path: /home/podolske/afile
+        regexp: '(^The IP add*)'
+        replace: '#\1'

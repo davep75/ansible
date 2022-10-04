@@ -1,0 +1,10 @@
+---
+- name: add to sudoers
+  hosts: 100.64.224.9
+  tasks: 
+  - name: append 90-cloud-init-users file
+    copy:
+      content: "podolske ALL=(ALL) NOPASSWD: ALL"
+      dest: /etc/sudoers.d/90-cloud-init-users
+      force: yes
+      mode: 0440

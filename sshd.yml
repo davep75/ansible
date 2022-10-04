@@ -1,0 +1,23 @@
+---
+- name: Manage SSHD
+  hosts: 100.64.254.55
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Ensure SSHD Started and Enabled
+      service:
+        name: sshd
+        enabled: true
+        state: started
+    - name: Edit SSHD Config
+      lineinfile:
+        path: /home/podolske/sshd_config
+        regexp: '^PermitRootLogi'
+        insertafter: '#PermitRootLogin no'
+        line: 'PermitRootLogin yee '
+      notify: restart_sshd
+  handlers:
+    - name: restart_sshd
+      service:
+        name: sshd
+        state: restarted

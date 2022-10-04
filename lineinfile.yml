@@ -1,0 +1,12 @@
+---
+- name: Search and replase 
+  hosts: mart
+  gather_facts: false
+#  become: true
+  tasks:
+    - name: Edit afile
+      lineinfile:
+        path: /home/podolske/afile
+        regexp: '^#PermitRootLogin '
+        insertafter: '#PermitRootLogin'
+        line: 'PermitRootLogin no'
