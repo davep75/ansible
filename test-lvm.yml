@@ -1,0 +1,28 @@
+---
+- hosts: coresite
+#  vars:
+#    myfile: "{{ /tmp/splunk.txt }}"
+  tasks:
+#
+    - name: see available drives (Linux)
+      shell: lsblk
+      register: lsblk
+    - debug: var=lsblk.stdout_lines
+    - name: add disk to LVM (Linux)
+      shell: pvcreate /dev/sdb1
+    - name: add disk to LVM (Linux)
+      shell: pvcreate /dev/sdb1
+    - name: extend LVM volume group (Linux)
+      shell: vgextend ubuntu-vg /dev/sdb1
+    - name: extend LVM volume group (Rocky)
+      shell: /usr/sbin/vgextend ubuntu-vg /dev/sdb1
+      when: ansible_facts['distribution'] == "Rocky"
+    - name: extend LVM logical volume (Ubuntu)
+      shell: /sbin/lvextend -L +5G /dev/ubuntu-vg/data /dev/sdb1
+      when: ansible_facts['distribution'] == "Ubuntu"
+    - name: resize filesystem (Linux)
+      shell: resize2fs /dev/ubuntu-vg/data
+    - name: sanity check LVM (Linux)
+      shell: pvs; vgs; lvs
+      register: lvm
+    - debug: var=lvm.stdout_lines
