@@ -4,3 +4,8 @@
   tasks: 
   - name: add /etc/issue file
     copy: src=Rocky-banner.txt dest=/etc/issue mode=644
+  - name: comment Banner line with issue.net in sshd_config
+    replace:
+      path: /etc/ssh/sshd_config
+      regexp: '(^Banner /etc/issue.net)'
+      replace: '#\1'
