@@ -1,0 +1,18 @@
+------------------------------------------------------------------------------
+
+This is a restricted access system.  All activity on this system is subject
+to auditing and monitoring.  Should the data collected during the monitoring
+provide evidence of criminal activity or activity exceeding the privileges,
+such evidence may be provided to the authorities for use in administrative
+or other adverse action, to include criminal prosecution.  By continuing past
+this point, whether you are an authorized user or not, you expressly consent
+to this monitoring.
+
+This computer resource is the property of Motorola. Authorized persons
+may use Motorola computer resources only for approved purposes. Misuse
+or misappropriation of such resources is prohibited.
+
+IF YOU ARE NOT AN AUTHORIZED USER, PLEASE DISCONTINUE THE LOGIN PROCESS NOW.
+
+------------------------------------------------------------------------------
+
