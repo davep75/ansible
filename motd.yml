@@ -1,0 +1,6 @@
+---
+- name: replace banner with Rocky-banner.txt
+  hosts: reston
+  tasks: 
+  - name: add /etc/issue file
+    copy: src=Rocky-banner.txt dest=/etc/issue mode=644
