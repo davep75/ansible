@@ -1,0 +1,28 @@
+---
+- name: Rebuild salt table in CMDB database
+  hosts: cmdb
+# note to self. create zero length csv file in advance
+  tasks:
+    - name: Convert RHEL output to csv
+      ansible.builtin.shell:
+        chdir: cmdb/
+        cmd: "awk -F: -f salt2.awk < rhel-10-10.txt > rhel-10-10.csv"
+
+    - name: Convert Ubuntu output to csv
+      ansible.builtin.shell:
+        chdir: cmdb/
+        cmd: "awk -F: -f salt2.awk  < ubuntu-10-10.txt > ubuntu-10-10.csv"
+
+# note to self. create sql to truncate salt table and LOAD DATA
+    - name: Copy SQL file
+      copy: src=source/rebuild-salt.sql dest=/tmp/rebuild-salt.sql
+# not to self  execute that shit
+    - name: Recreate table called salt
+      shell: mysql -h 172.12.0.2 -u cmdb cmdb < /tmp/rebuild-salt.sql
+#
+#    - name: Copy Connection PHP File
+#      copy: src=/source/connection.php dest=/var/www/html/
+#
+#    - name: Copy Index PHP file
+#      copy: src=/source/index.php dest=/var/www/html/
+#
