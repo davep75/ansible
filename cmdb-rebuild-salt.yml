@@ -38,12 +38,9 @@
         login_user: cmdb
         state: import
         target: /home/podolske/cmdb/rebuild-salt.sql
-#      register: mysql
-#    - debug: var=mysql.stdout_lines
-#
-#    - name: Copy Connection PHP File
-#      copy: src=/source/connection.php dest=/var/www/html/
-#
-#    - name: Copy Index PHP file
-#      copy: src=/source/index.php dest=/var/www/html/
+# nono of this is working
+#      register: semprini
+#    - name: show output
+#      when: semprini|succeeded
+#      debug: msg= "{{ semprini.stdout_lines }}"
 #
