@@ -8,38 +8,38 @@
   - name: Installing HTTPD
     yum: name=httpd state=latest
 
-  - name: Installing MariaDB package
+  - name: Installing MySQL package
     yum:
       name:
-      - mariadb-server
-      - mariadb-devel
-      - mariadb-connector-odbc
-      - mariadb-server-utils
+#      - mariadb-server
+#      - mariadb-devel
+#      - mariadb-connector-odbc
+#      - mariadb-server-utils
       - python3-PyMySQL
       - php
       state: latest
 
-  - name: Start and Enable MariaDB Service
-    service: name=mariadb state=started
+  - name: Start and Enable MySQL Service
+    service: name=mysqld state=started
 
-  - name: Update MariaDB root password
+  - name: Update MySQL root password
     mysql_user:
       name: root
       host: localhost
-      password: mysql
+      password: s1rdhn
       login_user: root
-      login_password: mysql
+      login_password: s1rdhn
       check_implicit_admin: yes
       priv: "*.*:ALL,GRANT"
 
   - name: Create a New Database called inventory
-    mysql_db: name=inventory state=present login_user=root login_password=mysql
+    mysql_db: name=inventory state=present login_user=root login_password=s1rdhn
 
   - name: Copy SQL file
     copy: src=servers.sql dest=/tmp/servers.sql
 
   - name: Create empty table called servers
-    shell: mysql -u root -pmysql inventory < /tmp/servers.sql
+    shell: mysql -u root -ps1rdhn inventory < /tmp/servers.sql
 
   - name: Copy Connection PHP File
     copy: src=connection.php dest=/var/www/html/
