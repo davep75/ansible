@@ -13,6 +13,21 @@
         chdir: cmdb/
         cmd: "awk -F: -f salt2.awk  < ubuntu-10-10.txt > ubuntu-10-10.csv"
 
+    - name: Convert blurdev output to csv
+      ansible.builtin.shell:
+        chdir: cmdb/
+        cmd: "awk -F: -f salt2.awk  < carrier-blurdev.txt > carrier-blurdev.csv"
+
+    - name: Convert coresite output to csv
+      ansible.builtin.shell:
+        chdir: cmdb/
+        cmd: "awk -F: -f salt2.awk  < carrier-coresite.txt > carrier-coresite.csv"
+
+    - name: Convert reston output to csv
+      ansible.builtin.shell:
+        chdir: cmdb/
+        cmd: "awk -F: -f salt2.awk  < carrier-reston.txt > carrier-reston.csv"
+
     - name: Copy SQL to rebuild the salt table
       copy: src=source/rebuild-salt.sql dest=/home/podolske/cmdb/rebuild-salt.sql
 
