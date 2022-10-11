@@ -13,12 +13,18 @@
         chdir: cmdb/
         cmd: "awk -F: -f salt2.awk  < ubuntu-10-10.txt > ubuntu-10-10.csv"
 
-# note to self. create sql to truncate salt table and LOAD DATA
-    - name: Copy SQL file
-      copy: src=source/rebuild-salt.sql dest=/tmp/rebuild-salt.sql
-# not to self  execute that shit
+    - name: Copy SQL to rebuild the salt table
+      copy: src=source/rebuild-salt.sql dest=/home/podolske/cmdb/rebuild-salt.sql
+
     - name: Recreate table called salt
-      shell: mysql -h 172.12.0.2 -u cmdb cmdb < /tmp/rebuild-salt.sql
+      mysql_db:
+        name: cmdb
+#        login_host: 172.17.0.2
+        login_user: cmdb
+        state: import
+        target: /home/podolske/cmdb/rebuild-salt.sql
+#      register: mysql
+#    - debug: var=mysql.stdout_lines
 #
 #    - name: Copy Connection PHP File
 #      copy: src=/source/connection.php dest=/var/www/html/
