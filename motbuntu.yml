@@ -1,0 +1,10 @@
+---
+ - name: Modify index.html using templates 
+   hosts: 100.64.186.230
+   gather_facts: true
+   tasks:
+     - name: Copy /home/podolske/www/index.html
+       template:
+         src: index.html.j2
+         dest: /home/podolske/www/index.html
+         mode: 0644
