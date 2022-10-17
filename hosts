@@ -5,7 +5,6 @@ ilmldave02
 ilmldave03
 100.64.186.230
 [reston]
-va32ldave01
 va32ldave02
 [coresite]
 ilcldave02
@@ -13,4 +12,4 @@ ilclbldtst06
 [lamp]
 ilclbldtst06
 [cmdb]
-ilmldave02
+va32ldave01
