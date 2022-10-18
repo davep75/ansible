@@ -1,0 +1,18 @@
+---
+- name: Manage the /export/home/podolske/afile file
+  hosts: solaris
+  gather_facts: true
+  tasks:
+    - name: populate file with specific entries
+      copy:
+        mode: 0644
+        dest: /export/home/podolske/afile
+        content: |
+          This system is managed by Ansible
+          The system name is {{ ansible_hostname }}
+          The IP address is {{ ansible_default_ipv4.address }}
+    - name: comment line with specific entries
+      replace:
+        path: /export/home/podolske/afile
+        regexp: '(^The IP add*)'
+        replace: '#\1'
