@@ -1,0 +1,64 @@
+---
+- name: Deploy NIS 
+  hosts: nis
+#  become: yes
+
+  tasks:
+    - name: Installing packages
+      yum: 
+        name: "{{ list }}" 
+        state: latest
+      with_items:
+        - ypserv
+        - rpcbind 
+        - yp-tools
+        - nss-pam-ldapd
+      when: ansible_facts['distribution'] == "Rocky"
+
+    - name: set domainame to nis01
+      shell: /usr/bin/ypdomainname nis01
+    - name: add lines to /etc/sysconfig/network file
+      lineinfile:
+        dest: /etc/sysconfig/network
+        line: "{{ item }}"
+      with_items:
+        - NISDOMAIN=nis01
+        - YPSERV_ARGS="-p 911"
+        - YPXFRD_ARGS="-p 912"
+ 
+    - name: add /var/yp/securenets file
+      copy: src=securenets dest=/var/yp/securenets mode=644
+#
+    - name: add lines to /etc/yp.conf file
+      lineinfile:
+        dest: /etc/yp.conf
+        line: "domain nis01 server 127.0.0.1"
+
+    - name: comment line with auto.misc map
+      replace:
+        path: /etc/auto.master
+        regexp: '(^/misc*)'
+        replace: '#\1'
+    - name: comment line with hosts map
+      replace:
+        path: /etc/auto.master
+        regexp: '(^/net*)'
+        replace: '#\1'
+    - name: comment line with dir map
+      replace:
+        path: /etc/auto.master
+        regexp: '(^\+dir*)'
+        replace: '#\1'
+    - name: comment line with auto.master map
+      replace:
+        path: /etc/auto.master
+        regexp: '(^\+auto.master)'
+        replace: '#\1'
+    - name: add lines to auto.master file
+      lineinfile:
+        dest: /etc/auto.master
+        line: "{{ item }}"
+      with_items:
+        - '/home   nis:auto.home'
+        - '/apps   nis:auto.apps'
+        - '/proj   nis:auto.prod'

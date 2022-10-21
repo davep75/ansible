@@ -1,0 +1,13 @@
+---
+- hosts: nis
+  tasks:
+    - name: create account for renaldo (Rocky)
+      ansible.builtin.user:
+        name: renaldo
+#        password: "(( 'password' | password_hash('sha512','newuser123') }}"
+        uid: 18481
+        group: wheel
+        state: present
+        comment: "Renaldo User"
+      when: ansible_facts['distribution'] == "Rocky"
+...
