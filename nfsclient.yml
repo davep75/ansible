@@ -1,0 +1,30 @@
+---
+- name: Deploy NFS client config 
+  hosts: nis
+#  become: yes
+
+  tasks:
+    - name: Installing packages
+      yum: 
+        name: "{{ item }}" 
+        state: latest
+      with_items: 
+        - nfs-utils
+        - libnfsidmap 
+      when: ansible_facts['distribution'] == "Rocky"
+
+    - name: uncomment line in /etc/idmapd.conf with Domain
+      replace:
+        path: /etc/idmapd.conf
+        regexp: '(^/#Domain*)'
+        replace: 'Domain = mot.com'
+
+#    - name: enable services
+#      ansible.builtin.systemd:
+#        enabled: yes
+#        name: "{{ item }}"
+#      with_items:
+#        - rpcbind
+#        - yp
+#        - ypxfrd
+#        - yppasswdd

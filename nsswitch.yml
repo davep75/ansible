@@ -1,0 +1,66 @@
+---
+- name: Modify nsswitch.conf 
+  hosts: nis
+#  become: yes
+
+  tasks:
+
+
+    - name: comment existing passwd entry in nsswitch.conf
+      replace:
+        path: /etc/nsswitch.conf
+        regexp: '(^passwd:*)'
+        replace: '#\1'
+
+    - name: add desired passwd entry in nsswitch.conf
+      lineinfile:
+        path: /etc/nsswitch.conf
+        regexp: '^#passwd:'
+        insertafter: '#passwd:'
+        line: 'passwd:     files nis sss'
+
+    - name: comment existing group entry in nsswitch.conf
+      replace:
+        path: /etc/nsswitch.conf
+        regexp: '(^group:*)'
+        replace: '#\1'
+
+    - name: add desired group entry in nsswitch.conf
+      lineinfile:
+        path: /etc/nsswitch.conf
+        regexp: '^#group:'
+        insertafter: '#group:'
+        line: 'group:     files nis sss'
+
+    - name: comment existing shadow entry in nsswitch.conf
+      replace:
+        path: /etc/nsswitch.conf
+        regexp: '(^shadow:*)'
+        replace: '#\1'
+
+    - name: add desired shadow entry in nsswitch.conf
+      lineinfile:
+        path: /etc/nsswitch.conf
+        regexp: '^#shadow:'
+        insertafter: '#shadow:'
+        line: 'shadow:     files nis sss'
+
+#    keeps adding another one not-idempotent
+#    - name: change passwd entry in /etc/nsswitch.conf
+#      replace:
+#        path: /etc/nsswitch.conf
+#        regexp: '(^passwd:*)'
+#        replace: 'passwd:     compat'
+    
+    - name: comment existing hosts entry in nsswitch.conf
+      replace:
+        path: /etc/nsswitch.conf
+        regexp: '(^hosts:*)'
+        replace: '#\1'
+
+    - name: add desired hosts entry in nsswitch.conf
+      lineinfile:
+        path: /etc/nsswitch.conf
+        regexp: '^#hosts:'
+        insertafter: '#hosts:'
+        line: 'hosts:     files nis dns'

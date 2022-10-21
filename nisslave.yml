@@ -15,7 +15,7 @@
         - nss-pam-ldapd
       when: ansible_facts['distribution'] == "Rocky"
 
-    - name: set domainame to nis01
+    - name: set domainname to nis01
       shell: /usr/bin/ypdomainname nis01
     - name: add lines to /etc/sysconfig/network file
       lineinfile:
@@ -26,6 +26,15 @@
         - YPSERV_ARGS="-p 911"
         - YPXFRD_ARGS="-p 912"
  
+    - name: set domainname to nis01
+      shell: /usr/bin/ypdomainname nis01
+
+    - name: change YPPASSWD_ARGS in /etc/sysconfig/yppasswdd
+      replace:
+        path: /etc/sysconfig/yppasswdd
+        regexp: '(^YPPASSWDD_ARGS="")'
+        replace: 'YPPASSWDD_ARGS="--port 913"'
+
     - name: add /var/yp/securenets file
       copy: src=securenets dest=/var/yp/securenets mode=644
 #
@@ -64,6 +73,19 @@
         - '/home   nis:auto.home'
         - '/apps   nis:auto.apps'
         - '/proj   nis:auto.prod'
+
+    - name: change passwd entry in /etc/nsswitch.conf
+      replace:
+        path: /etc/nsswitch.conf
+        regexp: '(^passwd:*$)'
+        replace: 'passwd:     compat'
+    
+    - name: change hosts entry in /etc/nsswitch.conf
+      replace:
+        path: /etc/nsswitch.conf
+        regexp: '(^hosts:      files*$)'
+        replace: '\1 nis dns'
+
 
     - name: enable services
       ansible.builtin.systemd:
