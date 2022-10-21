@@ -6,9 +6,9 @@
   tasks:
     - name: Installing packages
       yum: 
-        name: "{{ list }}" 
+        name: "{{ item }}" 
         state: latest
-      with_items:
+      with_items: 
         - ypserv
         - rpcbind 
         - yp-tools
@@ -29,6 +29,8 @@
     - name: add /var/yp/securenets file
       copy: src=securenets dest=/var/yp/securenets mode=644
 #
+    - name: create /etc/yp.conf 
+      shell: /usr/bin/touch /etc/yp.conf
     - name: add lines to /etc/yp.conf file
       lineinfile:
         dest: /etc/yp.conf
@@ -62,3 +64,13 @@
         - '/home   nis:auto.home'
         - '/apps   nis:auto.apps'
         - '/proj   nis:auto.prod'
+
+    - name: enable services
+      ansible.builtin.systemd:
+        enabled: yes
+        name: "{{ item }}"
+      with_items:
+        - rpcbind
+        - ypserv
+        - ypxfrd
+        - yppasswdd
