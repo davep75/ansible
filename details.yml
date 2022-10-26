@@ -1,6 +1,6 @@
 ---
 - name: Upgrade Systems
-  hosts: all
+  hosts: test
   become: false
   gather_facts: true
   tasks:
