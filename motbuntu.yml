@@ -1,10 +1,53 @@
 ---
- - name: Modify index.html using templates 
-   hosts: 100.64.186.230
-   gather_facts: true
-   tasks:
-     - name: Copy /home/podolske/www/index.html
-       template:
-         src: index.html.j2
-         dest: /home/podolske/www/index.html
-         mode: 0644
+- name: Provision podolske-motbuntu01 
+  hosts: motbuntu
+  gather_facts: true
+  tasks:
+    - name: Set hostname
+      command: hostnamectl set-hostname podolske-motbuntu01
+    - name: Local Timezone
+      command: timedatectl set-timezone America/Chicago
+    - name: comment pool line in /etc/chrony.conf
+      replace:
+        path: /etc/chrony.conf
+        regexp: '(^pool*)'
+        replace: '#\1'
+
+    - name: Add ntp1 to chrony.conf
+      lineinfile:
+        path: /etc/chrony.conf
+        insertafter: '#pool'
+        line: 'server ntp1.mot.com'
+      notify: restart_chronyd
+
+#    - name: create account for Podolske (Rocky)
+#      shell: /usr/sbin/useradd -m -u 18480 -g 10 podolske
+#      when: ansible_facts['distribution'] == "Rocky"
+#
+    - name: add account for podolske 
+      ansible.builtin.user:
+        name: podolske
+        uid: 18480
+        group: wheel
+        comment: "Dave Podolske"
+        state: present
+    - name: Copy /home/podolske/.ssh/authorized_keys
+      template:
+        src: authorized_keys
+        dest: /home/podolske/.ssh/
+        mode: 0600
+    - name: Fix /home/podolske/.ssh/ ownership and permission
+      file:
+        path: /home/podolske/.ssh
+        owner: podolske
+        mode: 0700
+    - name: Fix /home/podolske/.ssh/authorized_keys ownership 
+      file:
+        path: /home/podolske/.ssh/authorized_keys
+        owner: podolske
+
+  handlers:
+    - name: restart_chronyd
+      service:
+        name: chronyd
+        state: restarted
