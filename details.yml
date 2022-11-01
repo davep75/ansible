@@ -11,3 +11,4 @@
         - "{{ ansible_hostname }}"
         - "{{ ansible_distribution }}"
         - "{{ ansible_distribution_version }}"
+        - "ansible_facts['distribution'}"
