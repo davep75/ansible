@@ -38,7 +38,7 @@
       file: 
         path: /home/podolske/root.bashrc
         state: touch
-        permissions: 0755
+        mode: 0755
     - name: update prompt in root.bashrc
       lineinfile:
         path:  /home/podolske/root.bashrc
