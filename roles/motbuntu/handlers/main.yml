@@ -1,0 +1,8 @@
+---
+# handlers file for roles/motbuntu
+#
+    - name: restart_chronyd
+      service:
+        name: chronyd
+        state: restarted
+

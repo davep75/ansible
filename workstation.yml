@@ -1,0 +1,8 @@
+---
+- name: Provision podolske-motbuntu01 
+  hosts: motbuntu
+  gather_facts: true
+  roles:
+    - motbuntu
+    - podolske
+

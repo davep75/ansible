@@ -1,0 +1,47 @@
+---
+    - name: Add account for podolske 
+      ansible.builtin.user:
+        name: podolske
+        uid: 18480
+        password: "$6$azorvBkq1Phk6ZSs$zyEuuPbxWn3NxRvy7TiHRlRWm9/Gv7Jz6XEZ9Ncd3XErSqVPJt5aZeAy2Bb6pLanF6.BJJoGqPVPwzMHzt2j80"
+        group: wheel
+        comment: "Dave Podolske"
+        state: present
+      when: ansible_facts['distribution'] == "Rocky"
+    - name: Copy /home/podolske/.ssh/authorized_keys
+      template:
+        src: authorized_keys
+        dest: /home/podolske/.ssh/
+        mode: 0600
+    - name: Fix /home/podolske/.ssh/ ownership and permission
+      file:
+        path: /home/podolske/.ssh
+        owner: podolske
+        mode: 0700
+    - name: Fix /home/podolske/.ssh/authorized_keys ownership 
+      file:
+        path: /home/podolske/.ssh/authorized_keys
+        owner: podolske
+    - name: Add custom prompt to .bashrc
+      lineinfile:
+        path: /home/podolske/.bashrc
+        line: "export PS1='$HOSTNAME:${PWD}> '"
+    - name: Add key binding to .bashrc
+      lineinfile:
+        path: /home/podolske/.bashrc
+        line: 'set -o vi'
+    - name: Turn off title update in .bashrc
+      lineinfile:
+        path: /home/podolske/.bashrc
+        line: 'unset PROMPT_COMMAND'
+    - name: create /home/podolske/root.bashrc
+      file: 
+        path: /home/podolske/root.bashrc
+        state: touch
+        permissions: 0755
+    - name: update prompt in root.bashrc
+      lineinfile:
+        path:  /home/podolske/root.bashrc
+        line: "export PS1='$HOSTNAME:${PWD}# '"
+    - name: complete root.bashrc
+      shell: "tail -2 ~podolske/.bashrc >> ~podolske/root.bashrc"
