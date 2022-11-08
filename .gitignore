@@ -1,3 +1,4 @@
+*.old
 afile-2nd-pass.txt
 .bash_history_ansible
 distro.old
