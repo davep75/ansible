@@ -1,21 +1,18 @@
 ---
-#- name: test new knowledge of ansible
-#  add_host:
-#    name: va32ldave02.mot.com
-#    ansible_host:  10.62.176.27
-#- name: add to sudoers
-#  hosts: 10.62.176.27
-#  tasks: 
-#  - name: append 90-cloud-init-users file
-#    copy:
-#      content: "podolske ALL=(ALL) NOPASSWD: ALL"
-#      dest: /etc/sudoers.d/80-cloud-init-users
-#      force: yes
-#      mode: 0440
-- name: example play
-  hosts: all
+- name: test new knowledge of ansible
+  hosts: coresite
   gather_facts: true
+  vars: 
+    fruit: "apple"
   tasks:
-   - name: which host are we
-     debug:
-       var: inventory_hostname
+#    - name: copy to existing file
+#      ansible.builtin.copy:
+#        content: "{{ fruit }}"
+#        dest: "/home/podolske/afile"
+    - name: template to existing file
+      template:
+        src: template.j2
+        dest: "/home/podolske/afile"
+#  - name: output
+#    debug:
+#      var: inventory_hostname
