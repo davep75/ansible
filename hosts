@@ -26,3 +26,5 @@ reston
 coresite
 [rhel6]
 va32rhel65b
+[docker]
+ilcldave02
