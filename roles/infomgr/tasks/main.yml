@@ -1,0 +1,37 @@
+---
+  - name: ensure infomgr group exists
+    group:
+     name: infomgr
+     gid: 1001
+     state: present
+  - name: create infomgr user
+    user:
+     name: infomgr
+     uid: 1001
+     group: infomgr
+     comment: Infomgr Admin
+     home: /home/infomgr
+     shell: /bin/bash
+  - name: give infomgr sudoer rights
+    file:
+      path: /etc/sudoers.d/15-infomgr
+      state: absent
+  - lineinfile:
+      dest: /etc/sudoers.d/15-infomgr
+      mode: '0440'
+      create: yes
+      line: infomgr ALL=(ALL) NOPASSWD:ALL
+  - name: Copy /home/infomgr/.ssh/authorized_keys
+    template:
+      src: authorized_keys
+      dest: /home/infomgr/.ssh/
+      mode: 0600
+  - name: Fix /home/infomgr/.ssh/ ownership and permission
+    file:
+      path: /home/infomgr/.ssh
+      owner: infomgr
+      mode: 0700
+  - name: Fix /home/infomgr/.ssh/authorized_keys ownership 
+    file:
+      path: /home/infomgr/.ssh/authorized_keys
+      owner: infomgr
