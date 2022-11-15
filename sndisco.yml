@@ -1,6 +1,6 @@
 ---
 - name: create discovery account
-  hosts: 100.64.254.55
+  hosts: openstack
   tasks:
   - name: ensure sndisco group exists
     group:
@@ -11,9 +11,11 @@
     user:
      name: sndisco
      password: '$1$aiPGmDDQ$fGEjg2KQEnwpB8PDLvAl6/'
-     shell: /bin/bash
      uid: 199
      group: sndisco
+     comment: Servicenow Discovery
+     home: /var/adm/sndisco
+     shell: /bin/bash
   - name: ensure sndisco sudoer rights
     file:
       path: /etc/sudoers.d/sndiscovery
