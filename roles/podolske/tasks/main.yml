@@ -6,8 +6,9 @@
         password: "$6$azorvBkq1Phk6ZSs$zyEuuPbxWn3NxRvy7TiHRlRWm9/Gv7Jz6XEZ9Ncd3XErSqVPJt5aZeAy2Bb6pLanF6.BJJoGqPVPwzMHzt2j80"
         group: wheel
         comment: "Dave Podolske"
+        home: /home/podolske
         state: present
-      when: ansible_facts['distribution'] == "Rocky"
+#      when: ansible_facts['distribution'] == "Rocky"
     - name: Copy /home/podolske/.ssh/authorized_keys
       template:
         src: authorized_keys
