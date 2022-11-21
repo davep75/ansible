@@ -1,0 +1,32 @@
+---
+ - name: Restart postfix.service after changing /etc/postfix/main.cf
+#   become: true
+   hosts: ubuntu
+   gather_facts: true
+   tasks:
+     - name: Set relayhost
+       replace:
+         path: /etc/postfix/main.cf
+         regexp: '^#relayhost = \[an.ip.add.ress\]'
+         replace: relayhost = ilclmail01.mot.com
+     - name: Set interfaces
+       replace:
+         path: /etc/postfix/main.cf
+         regexp: '^inet_interfaces = localhost'
+         replace: 'inet_interfaces = $myhostname, localhost'
+     - name: Set domain
+       lineinfile:
+         path: /etc/postfix/main.cf
+         insertafter: '#mydomain = domain.tld'
+         line: mydomain = mot.com
+     - name: Set hostname
+       lineinfile:
+         path: /etc/postfix/main.cf
+         insertafter: '#myhostname = virtual.domain.tld'
+         line: myhostname = {{ ansible_hostname }}.mot.com
+       notify: restart_postfix
+   handlers:
+     - name: restart_postfix
+       service:
+         name: postfix.service
+         state: restarted
