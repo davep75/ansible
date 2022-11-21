@@ -9,11 +9,17 @@
     - name: Install epel-release repository
       yum: name=epel-release state=present
    
-    - name: Install nrpe, nagios-plugins-all
+    - name: Install nrpe
       yum: name=nrpe state=present
 
     - name: Install nagios-plugins-all
       yum: name=nagios-plugins-all state=present
+
+    - name: Install iostat
+      yum: name=sysstat state=present
+
+    - name: Copy master /etc/sudoers.d/nrpe file
+      copy: src=nrpe.cfg dest=/etc/nagios/ mode=644
 
     - name: Configure nagios server IP in nrpe configuration file
       lineinfile: 
@@ -26,9 +32,15 @@
         dest: /etc/nagios/nrpe.cfg
         regexp: dont_blame_nrpe=0
         line: dont_blame_nrpe=1
+      notify: restart_nrpe
+    
+    - name: add /etc/sudoers.d/nrpe file
+      copy: src=nrpe-Rocky.sudoer dest=/etc/sudoers.d/nrpe mode=440
 
-# - name: Start nrpe service and enable it on startup
-#   service:
-#       name=nrpe
-#	   state=restarted
-#	   enabled=yes
+
+  handlers:
+    - name: restart_nrpe
+      service:
+        name: nrpe
+        enabled: true
+        state: restarted
