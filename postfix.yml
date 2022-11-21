@@ -1,14 +1,21 @@
 ---
  - name: Restart postfix.service after changing /etc/postfix/main.cf
 #   become: true
-   hosts: ubuntu
+   hosts: motbuntu
    gather_facts: true
    tasks:
+     - name: Create relay_passwd file
+       copy:
+         content: "[smtp.mot.com] VA32-SMTP-SVC:wtts0Sitr"
+         dest: /etc/postfix/relay_passwd
+         force: yes
+         mode: 0600
+       notify: create_postmap 
      - name: Set relayhost
        replace:
          path: /etc/postfix/main.cf
          regexp: '^#relayhost = \[an.ip.add.ress\]'
-         replace: relayhost = ilclmail01.mot.com
+         replace: 'relayhost = [smtp.mot.com]'
      - name: Set interfaces
        replace:
          path: /etc/postfix/main.cf
@@ -30,3 +37,7 @@
        service:
          name: postfix.service
          state: restarted
+     - name: create_postmap
+       command:
+         chdir: /etc/postfix
+         cmd: /usr/sbin/postmap /etc/postfix/relay_passwd
