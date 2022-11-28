@@ -6,4 +6,4 @@ distro.txt
 hosts
 id_rsa
 id_rsa.pub
-logs/
+log/ansible.log
