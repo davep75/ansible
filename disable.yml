@@ -1,0 +1,12 @@
+---
+ - name: disable user
+   hosts: motbuntu
+   vars:
+     user_name:  liveuser
+   tasks:
+    - name: disable account for user_name 
+      ansible.builtin.user:
+        name: "{{ user_name }}"
+        password_lock: yes
+        shell_string: "/sbin/nologin"
+#      when: ansible_facts['distribution'] == "Rocky"
