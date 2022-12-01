@@ -1,0 +1,663 @@
+---
+# tasks file for OS-Post
+
+- name: Force facts gathering
+  setup:
+  tags: always
+
+# Change target hostname
+- name: Change hostname to "{{ inventory_hostname }}"
+  shell: /usr/bin/hostnamectl set-hostname "{{ inventory_hostname }}"
+  when: ansible_distribution == "Ubuntu"
+  tags: set_hostname
+
+
+# run apt update and apt upgrade
+- name: run apt dist-upgrade
+  apt:
+    upgrade: dist
+    update_cache: yes
+    dpkg_options: 'force-confold,force-confdef'
+  when: ansible_distribution == "Ubuntu"
+  tags: dist-upgrade
+
+- name: Copy motd for /etc/issue.net
+  copy:
+    src: files/issue.net
+    dest: /etc/issue.net
+    owner: root
+    group: root
+    mode: 0644
+  tags: motd
+
+# Delete Ubuntu version info in MOTD
+- name: remove kernel version info from motd
+  lineinfile:
+    path: /etc/issue
+    state: absent
+    regexp: '^Ubuntu'
+  when: ansible_distribution == "Ubuntu"
+  tags: motd
+
+- name: Make /etc/update-motd.d/* not executable
+  shell: chmod -x /etc/update-motd.d/*
+  args:
+    warn: No
+  when: ansible_distribution == "Ubuntu"
+  tags: motd
+
+- name: Set Banner for ssh
+  replace:
+    path: /etc/ssh/sshd_config
+    regexp: '^#Banner none'
+    replace: 'Banner /etc/issue.net' 
+  tags: motd
+
+- name: Ensure group "sndisco" exists
+  group:
+    name: sndisco
+    gid: 19999
+    state: present
+  tags: sndisco
+
+- name: Create sndisco account
+  user:
+    name: sndisco
+    comment: "Servicenow Discovery"
+    group: sndisco
+    home: /var/sndisco
+    shell: /bin/bash
+    password: "{{ sndisco_password }}"
+    state: present
+  tags: sndisco
+
+- name: Copy sndiscovery sudo configuration
+  copy:
+    src: files/{{ ansible_distribution }}.sndiscovery
+    dest: /etc/sudoers.d/sndiscovery
+    owner: root
+    group: root
+    mode: 0440
+  tags: sndisco
+
+
+# Install and configure NIS/YP, autofs, if enabled with "enable_yp"
+- name: Setup domainname
+  shell: /usr/bin/domainname nis01
+  when: (enable_yp and ansible_distribution == "Ubuntu")
+  tags: nis
+
+
+- name: Install nscd and nis packages
+  apt:
+    dpkg_options: 'force-confold,force-confdef'
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - autofs
+    - rpcbind
+    - nscd
+    - nis
+  when: (enable_yp and ansible_distribution == "Ubuntu")
+  tags: nis
+
+- name: stop nis
+  service:
+    name: nis.service
+    state: stopped
+  when: (enable_yp and ansible_distribution == "Ubuntu")
+  tags: nis
+
+- name: Copy /etc/yp.conf
+  copy:
+    src: files/yp.conf
+    dest: /etc/yp.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: (enable_yp and ansible_distribution == "Ubuntu")
+  tags: nis
+
+- name: Copy /etc/defaultdomain
+  copy:
+    src: files/defaultdomain
+    dest: /etc/defaultdomain
+    owner: root
+    group: root
+    mode: 0644
+  when: (enable_yp and ansible_distribution == "Ubuntu")
+  tags: nis
+
+- name: Enable and run nis service
+  service:
+    name: nis
+    enabled: true
+    state: started
+  when: (enable_yp and ansible_distribution == "Ubuntu")
+  tags: nis
+
+- name: Copy /etc/nsswitch.conf
+  copy:
+    src: files/nsswitch.conf
+    dest: /etc/nsswitch.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: (enable_yp and ansible_distribution == "Ubuntu")
+  tags: nis
+
+- name: Copy /etc/default/autofs
+  copy:
+    src: files/autofs
+    dest: /etc/default/autofs
+    owner: root
+    group: root
+    mode: 0644
+  when: (enable_yp and ansible_distribution == "Ubuntu")
+  tags: nis
+
+
+- name: Copy /etc/auto.master
+  copy:
+    src: files/auto.master
+    dest: /etc/auto.master
+    owner: root
+    group: root
+    mode: 0644
+  when: (enable_yp and ansible_distribution == "Ubuntu")
+  tags: nis
+
+
+
+- name: Install chrony package
+  apt:
+    name: chrony
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+  tags: chrony
+
+- name: Copy /etc/chrony/chrony.conf
+  copy:
+    src: files/chrony.conf
+    dest: /etc/chrony/chrony.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart_chrony
+  when: ansible_distribution == "Ubuntu"
+  tags: chrony
+
+- name: Enable and run chrony service
+  service:
+    name: chrony
+    enabled: true
+    state: started
+  when: ansible_distribution == "Ubuntu"
+  tags: chrony
+
+
+# install resolvconf
+- name: install resolvconf
+  apt:
+    name: resolvconf
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+  tags: resolvconf
+
+# enable head
+- name: Copy head
+  copy:
+    src: files/head
+    dest: /etc/resolvconf/resolv.conf.d/head
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_distribution == "Ubuntu"
+  tags: resolvconf
+
+
+- name: check DNS
+  shell: /usr/bin/host {{ inventory_hostname }} 100.64.118.131
+  register: hasARecord
+  ignore_errors: true
+  when: ansible_distribution == "Ubuntu"
+  tags: dns-A
+
+# Add to DNS A record if not exist
+- name: add to DNS for mot.com
+  shell: /usr/local/sbin/dnsupdate add {{ inventory_hostname }} {{ ansible_host }}
+  delegate_to: "{{ groups['dnsjump'][0] }}"
+  register: dnsupdate_result
+  ignore_errors: true
+  vars:
+    - ansible_ssh_user: "{{ RUN_USER }}"
+    - ansible_ssh_private_key_file: "{{ RUN_USER_PRIVATE_KEY }}"
+  when: (hasARecord.rc == 1 and ansible_distribution == "Ubuntu")
+  tags: dns-A
+
+
+#- name: Remove libnspr4 libnss3 with autoremove
+#  apt:
+#    autoremove: yes
+#    name: "{{ packages }}"
+#    state: absent
+#    force: yes
+#  vars:
+#    packages:
+#    - libnspr4
+#    - libnss3
+#  when: ansible_distribution == "Ubuntu"
+#  tags: autoremove
+
+
+- name: Install ksh, csh and tcsh packages
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - ksh
+    - csh
+    - tcsh
+  when: ansible_distribution == "Ubuntu"
+  tags: shells
+
+
+# Install and configure LDAP authntication, if enabled with "enable_ldap"
+- name: Install ldap auth packages
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - ldap-auth-client
+    - ldap-auth-config
+    - ldap-utils
+    - libnss-ldap
+    - libpam-ldap
+  when: (enable_ldap and ansible_distribution == "Ubuntu")
+  tags: ldap-auth
+
+
+- name: Copy /etc/ldap.conf
+  copy:
+    src: files/ldap1.conf
+    dest: /etc/ldap.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: (enable_ldap and ansible_distribution == "Ubuntu")
+  tags: ldap-auth
+
+
+- name: Copy /etc/ldap/ldap.conf
+  copy:
+    src: files/ldap2.conf
+    dest: /etc/ldap/ldap.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: (enable_ldap and ansible_distribution == "Ubuntu")
+  tags: ldap-auth
+
+
+- name: Copy MotorolaCA.cer
+  copy:
+    src: files/MotorolaCA.cer
+    dest: /etc/MotorolaCA.cer
+    owner: root
+    group: root
+    mode: 0644
+  when: (enable_ldap and ansible_distribution == "Ubuntu")
+  tags: ldap-auth
+
+
+# Install and configure salt-minion
+- name: repo.saltstack.com key present
+  apt_key:
+    id: de57bfbe
+    url: https://repo.saltstack.com/py3/ubuntu/20.04/amd64/latest/SALTSTACK-GPG-KEY.pub
+    state: present
+  when: ansible_distribution == "Ubuntu"
+  tags: minion
+
+# Add specified repository into sources list for 20.04
+- name: add saltstack repo
+  apt_repository:
+    repo: deb [arch=amd64] http://repo.saltstack.com/py3/ubuntu/20.04/amd64/latest focal main
+    state: present
+    filename: 'saltstack'
+  when: ansible_distribution == "Ubuntu"
+  tags: minion
+
+- name: Install latest version of "salt-minion"
+  apt:
+    update_cache: yes
+    name: salt-minion
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+  tags: minion
+
+- name: Enable salt-minion.service
+  service:
+    name: salt-minion
+    enabled: true
+    state: stopped
+  when: ansible_distribution == "Ubuntu"
+  tags: minion
+
+- name: Populate minion_id
+  shell: /bin/hostname -s > /etc/salt/minion_id
+  when: ansible_distribution == "Ubuntu"
+  tags: minion
+
+- name: Copy file of /etc/salt/minion
+  copy:
+    src: files/minion
+    dest: /etc/salt/minion
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_distribution == "Ubuntu"
+  tags: minion
+
+- name: polulate save PKI if there is /var/tmp/restore/etc/salt/pki
+  shell: |
+    if [ -d /var/tmp/restore/etc/salt/pki ]
+    then
+      /bin/cp -r /var/tmp/restore/etc/salt/pki /etc/salt/
+    else
+      exit 0
+    fi
+  args:
+    executable: /bin/bash
+    warn: no
+  when: ansible_distribution == "Ubuntu"
+  tags: minion
+
+
+- name: Restart salt-minion.service
+  service:
+    name: salt-minion
+    state: restarted
+  when: ansible_distribution == "Ubuntu"
+  tags: minion
+
+
+- name: Accept minion_key on va32lsalt01
+  shell: /usr/bin/salt-key -y -a {{ inventory_hostname_short }}
+  delegate_to: "{{ groups['saltmasters'][0] }}"
+  register: saltkey_result
+  ignore_errors: true
+  vars:
+    - ansible_ssh_user: root
+    - ansible_ssh_private_key_file: "{{ ROOT_USER_PRIVATE_KEY }}"
+  when: ansible_distribution == "Ubuntu"
+  tags: minion
+
+# Check if NRPE has been installed
+- name: check nrpe service
+  shell: systemctl is-active -q nagios-nrpe-server.service
+  register: nrpe_active
+  ignore_errors: true
+  when: ansible_distribution == "Ubuntu"
+
+# Install NRPE via salt-call 
+- name: install and configure NRPE
+  shell: /usr/bin/salt-call state.sls lgit.prod.nrpe test=false
+  register: instllnrpe_result
+  ignore_errors: true
+  when: (ansible_distribution == "Ubuntu" and nrpe_active.rc != 0)
+  tags: nrpe
+
+# if physical, then enable raid_check
+- name: Copy check_raid.pl.ilclbld to check_raid.pl
+  shell: /bin/cp -f /usr/lib/nagios/plugins/contrib/check_raid.pl.ilclbld /usr/lib/nagios/plugins/contrib/check_raid.pl
+  ignore_errors: True
+  when: (ansible_virtualization_role == "host" and ansible_distribution == "Ubuntu")
+  tags: nrpe
+
+
+- name: Install xinetd package
+  apt:
+    name: xinetd
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+  tags: powerbroker
+
+
+- name: Install powerbroker package
+  apt:
+    deb: http://ilclkickstart01.mot.com/powerbroker-8.0.2-04ubuntu1_amd64.deb
+    state: present
+  when: ansible_distribution == "Ubuntu"
+  tags: powerbroker
+
+
+- name: Replace libpam in /etc/pb.settings for Ubuntu
+  replace:
+    path: /etc/pb.settings
+    regexp: 'lib64'
+    replace: 'lib/x86_64-linux-gnu'
+  when: ansible_distribution == "Ubuntu"
+  tags: powerbroker
+
+
+- name: Install build server extra packages
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - libaio1
+    - m4
+    - gcc
+    - unzip
+    - openjdk-8-jdk
+    - android-tools-adb
+    - bc
+    - bison
+    - build-essential
+    - curl
+    - flex
+    - g++-multilib
+    - gperf
+    - imagemagick
+    - lib32ncurses5-dev
+    - lib32readline-dev
+    - lib32z1-dev
+    - liblz4-tool
+    - libncurses5-dev
+    - libsdl1.2-dev
+    - libssl-dev
+    - libwxgtk3.0-dev
+    - libxml2-utils
+    - lzop
+    - pngcrush
+    - schedtool
+    - squashfs-tools
+    - xsltproc
+    - yasm
+    - git
+  when: (androidbld and ansible_distribution == "Ubuntu")
+  tags: androidbld
+
+
+- name: Install ethtool package
+  apt:
+    name: ethtool
+  when: ansible_distribution == "Ubuntu"
+  tags: ethtool
+
+- name: Install open-vm-tools package to VMWare guest
+  apt:
+    name: open-vm-tools
+  when: (ansible_virtualization_type == "VMware" and ansible_distribution == "Ubuntu")
+  tags: open-vm-tools
+
+- name: Install ipmitool package
+  apt:
+    name: ipmitool
+  when: (ansible_virtualization_role == "host" and ansible_distribution == "Ubuntu")
+  tags: ipmitool
+
+
+- name: HWRaid key present
+  apt_key:
+    id: 23B3D3B4
+    url: http://hwraid.le-vert.net/ubuntu/hwraid.le-vert.net.gpg.key
+    state: present
+  when: (ansible_virtualization_role == "host" and ansible_distribution == "Ubuntu")
+  tags: megacli
+
+- name: Add MegaCLI tool set repo
+  apt_repository:
+    repo: deb http://hwraid.le-vert.net/ubuntu focal main
+    state: present
+    filename: 'hwraid'
+  when: (ansible_virtualization_role == "host" and ansible_distribution == "Ubuntu")
+  tags: megacli
+
+- name: Install MegaCLI tool set packages
+  apt:
+    update_cache: yes
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - megacli
+    - megaclisas-status
+  when: (ansible_virtualization_role == "host" and ansible_distribution == "Ubuntu")
+  tags: megacli
+
+
+- name: Install openipmi package
+  apt:
+    name: openipmi
+  when: (ansible_virtualization_role == "host" and ansible_distribution == "Ubuntu")
+  tags: openipmi
+
+
+- name: Purge openssl and ca-certificates
+  shell: /usr/bin/dpkg --purge --force-depends openssl ca-certificates
+  ignore_errors: True
+  when: (androidbld and ansible_distribution == "Ubuntu")
+  tags: androidbld
+
+- name: Copy openssl package
+  copy:
+    src: files/openssl_1.0.1f-1ubuntu2.26_amd64.deb
+    dest: /tmp/openssl_1.0.1f-1ubuntu2.26_amd64.deb
+  when: (androidbld and ansible_distribution == "Ubuntu")
+  tags: androidbld
+
+- name: Copy ca-certificates package
+  copy:
+    src: files/ca-certificates_20170717_14.04.1_all.deb
+    dest: /tmp/ca-certificates_20170717_14.04.1_all.deb
+  when: (androidbld and ansible_distribution == "Ubuntu")
+  tags: androidbld
+
+- name: Install openssl and ca-certificates package
+  shell: /usr/bin/dpkg -i /tmp/openssl_1.0.1f-1ubuntu2.26_amd64.deb /tmp/ca-certificates_20170717_14.04.1_all.deb
+  ignore_errors: True
+  when: (androidbld and ansible_distribution == "Ubuntu")
+  tags: androidbld
+
+
+- name: Apt-mark hold openssl and ca-certificates
+  shell: /usr/bin/apt-mark hold openssl ca-certificates
+  ignore_errors: True
+  when: (androidbld and ansible_distribution == "Ubuntu")
+  tags: androidbld
+
+- name: Copy /etc/exports
+  copy:
+    src: files/exports
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: 0644
+  when: (androidbld and ansible_distribution == "Ubuntu")
+  tags: androidbld
+
+- name: add to /etc/systemd/logind.conf
+  shell: echo "\nUserTasksMax=infinity" >> /etc/systemd/logind.conf
+  when: (jenkinslave and ansible_distribution == "Ubuntu")
+  tags: androidbld
+
+
+- name: Copy /usr/bin/nosync
+  copy:
+    src: files/nosync
+    dest: /usr/bin/nosync
+    owner: root
+    group: root
+    mode: 0711
+  when: (jenkinslave and ansible_distribution == "Ubuntu")
+  tags: jenkinslave
+
+- name: Copy /etc/sudoers.d/nosync-mount
+  copy:
+    src: files/nosync-mount
+    dest: /etc/sudoers.d/nosync-mount
+    owner: root
+    group: root
+    mode: 0440
+  when: (jenkinslave and ansible_distribution == "Ubuntu")
+  tags: jenkinslave
+
+
+#- name: Remove libnspr4 libnss3, dictionaries-common, etc.  with autoremove
+#  apt:
+#    name: "{{ packages }}"
+#    state: absent
+#    force: yes
+#    purge: yes
+#  vars:
+#    packages:
+#    - dictionaries-common
+#    - emacsen-common
+#    - language-pack-en
+#    - language-pack-en-base
+#    - language-pack-gnome-en
+#    - language-pack-gnome-en-base
+#    - wbritish
+#  when: ansible_distribution == "Ubuntu"
+#  tags: rm-pkgs
+
+
+- name: Install diskquota and nfs server packages
+  apt:
+    update_cache: yes
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - quota
+    - nfs-kernel-server
+  when: ( userbld and ansible_distribution == "Ubuntu")
+  tags: nfs-server-pkgs
+
+
+- name: Install x-window packages
+  apt:
+    update_cache: yes
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - xinit
+    - x11-xkb-utils
+    - xfce4
+    - xfce4-goodies
+    - screen
+    - byobu
+  when: ( userbld and ansible_distribution == "Ubuntu")
+  tags: x-windows-pkgs
+
+## make sure only /localrepo and /localrepo2 in /etc/exports, otherwise, exportfs will fail
+##       options: ilclsamba02(rw,sync,no_subtree_check)
+## check usrquota option in /etc/fstab
+##    UUID=f6bd2331-b218-46af-90c9-0ff063a2b0fe       /localrepo2     ext4    defaults,usrquota       0  2
+## quotacheck -um /localrepo to generate aquota.user
+## quotacheck -um /localrepo2 to generate aquota.user
+## cd /localrepo2 ; ln -s . $(hostname)
+## change il427lnxdroid## -> ilclbld##
+#
+#
