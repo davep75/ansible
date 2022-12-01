@@ -8,5 +8,5 @@
       ansible.builtin.user:
         name: "{{ user_name }}"
         password_lock: yes
-        shell_string: "/sbin/nologin"
+        shell: /sbin/nologin
 #      when: ansible_facts['distribution'] == "Rocky"
