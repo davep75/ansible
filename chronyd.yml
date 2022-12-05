@@ -1,17 +1,27 @@
 ---
- - name: Restart chronyd after changing /etc/chrony/chrony.conf
+ - name: Restart chronyd after changing configuration
 #   become: true
-   hosts: 100.64.186.230
+   hosts: redhat
    gather_facts: true
    tasks:
-     - name: Edit config
+     - name: Edit Rocky config
        lineinfile:
          path: /etc/chrony/chrony.conf
          insertafter: '#pool'
          line: 'server ntp1.mot.com'
        notify: restart_chronyd
+       when: ansible_facts['distribution'] == "Rocky"
+     - name: Edit RedHat config
+       lineinfile:
+         path: /etc/chrony.conf
+         insertafter: '#pool'
+         line: 'server ntp1.mot.com'
+       notify: restart_chronyd
+       when: ansible_facts['distribution'] == "RedHat"
    handlers:
      - name: restart_chronyd
        service:
          name: chronyd
          state: restarted
+
+
