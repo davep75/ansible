@@ -1,0 +1,23 @@
+---
+- name: Manage SSHD
+  hosts: nova
+  gather_facts: true
+  become: true
+  tasks:
+    - name: Ensure SSHD Started and Enabled
+      service:
+        name: sshd
+        enabled: true
+        state: started
+    - name: Edit SSHD Config
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PermitRootLogi'
+        insertafter: '#PermitRootLogin *'
+        line: 'PermitRootLogin yes '
+      notify: restart_sshd
+  handlers:
+    - name: restart_sshd
+      service:
+        name: sshd
+        state: restarted

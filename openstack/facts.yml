@@ -1,0 +1,21 @@
+---
+- name: get mac address and interface using facts
+  hosts: nova
+  gather_facts: false
+  tasks:
+    - name: Gather Facts
+      setup:
+        filter="ansible_ens6f0v0"
+      register: facts
+
+    - debug:
+        msg: "{{ facts.ansible_facts.ansible_ens6f0v0 }}"
+
+    - name: copy content from facts to output file
+      local_action:
+        module: lineinfile
+        line: "{{ item }}"
+        path: /home/podolske/ansible/facts.txt
+      loop:
+        - "{{ facts.ansible_facts.ansible_ens6f0v0.macaddress }}"
+        - "{{ facts.ansible_facts.ansible_ens6f0v0.device }}"
