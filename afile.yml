@@ -17,3 +17,8 @@
         path: /home/podolske/afile
         regexp: '(^The IP add*)'
         replace: '#\1'
+    - name: learn how symbolic links created
+      ansible.builtin.file:
+        src: /home/podolske/afile
+        dest: /home/podolske/bfile
+        state: link
