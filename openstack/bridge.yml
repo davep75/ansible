@@ -1,0 +1,42 @@
+
+---
+- name: add bridges and bonds
+  hosts: nova
+  gather_facts: true
+  become: true
+  tasks:
+          #    - name: down br-mgt 
+          #      command: "/usr/sbin/ip link set dev br-mgt down"
+#    - name: delete br-mgt 
+#      command: "/usr/sbin/brctl delbr br-mgt; sleep 1"
+    - name: add br-ex
+      command: "/usr/bin/ovs-vsctl add-br br-ex"
+    - name: add br-data
+      command: "/usr/bin/ovs-vsctl add-br br-data"
+    - name: add br-stg
+      command: "/usr/bin/ovs-vsctl add-br br-stg"
+    - name: add br-mgt
+      command: "/usr/bin/ovs-vsctl add-br br-mgt"
+    - name: add bond1 to br-ex
+      command: "/usr/bin/ovs-vsctl add-port br-ex bond1"
+    - name: add bond2 to br-data
+      command: "/usr/bin/ovs-vsctl add-bond br-data bond2 ens6f0v1 ens9f0v1 bond_mode=balance-slb lacp=off"
+    - name: add bond3 to br-stg
+      command: "/usr/bin/ovs-vsctl add-bond br-stg bond3 ens9f0v2 ens6f0v2 bond_mode=balance-slb lacp=off"
+    - name: add bond0 to br-mgt
+      command: "/usr/bin/ovs-vsctl add-bond br-mgt bond0 ens9f0v0 ens6f0v0 bond_mode=balance-slb lacp=off"
+
+    - name: show netplan generate output
+      shell: "/usr/sbin/netplan generate"
+      register: netplan
+    - debug: var=netplan.stdout_lines
+    - name: start openvswitch before network
+      replace:
+        path: /lib/systemd/system/openvswitch-switch.service
+        regexp: '(^Before=network*)'
+        replace: 'Before=systemd-networkd.service'
+    - name: copy /etc/rc.local
+      copy:
+        src: rc.local
+        dest: /etc/rc.local
+        mode: 0755
