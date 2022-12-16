@@ -5,11 +5,12 @@
   gather_facts: true
   become: true
   tasks:
-    - name: install
+    - name: update cache
       apt:
         update_cache: yes
-      vars:
-        packages:
+    - name: install packages
+      apt:
+        pkg:
         - bridge-utils
         - debootstrap
         - ifenslave
@@ -22,7 +23,6 @@
         - tcpdump
         - vlan
         - python3
-        - openvswitch-switch
         - build-essential
         - python3-dev
         - ipxe-qemu
