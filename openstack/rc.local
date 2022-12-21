@@ -1,0 +1,21 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+echo 3 > /sys/class/net/ens6f0np0/device/sriov_numvfs
+echo 3 > /sys/class/net/ens9f0np0/device/sriov_numvfs
+#
+/usr/sbin/ip link set dev ens6f0np0 vf 0 vlan 110 trust on
+/usr/sbin/ip link set dev ens9f0np0 vf 0 vlan 110 trust on
+/usr/sbin/ip link set dev ens6f0np0 vf 1 vlan 260 trust on
+/usr/sbin/ip link set dev ens9f0np0 vf 1 vlan 260 trust on
+/usr/sbin/ip link set dev ens6f0np0 vf 2 vlan 310 trust on
+/usr/sbin/ip link set dev ens9f0np0 vf 2 vlan 310 trust on
