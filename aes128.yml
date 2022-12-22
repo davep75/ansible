@@ -1,0 +1,32 @@
+---
+- name: Remove aes128-cbc
+  hosts: motbuntu
+  gather_facts: true
+  become: true
+  tasks:
+    - name: copy over aes128.awk
+      copy:
+        src: aes128.awk
+        dest: /tmp/aes128.awk
+    - name: Edit openssh.config
+      shell: '/usr/bin/awk -f /tmp/aes128.awk < /home/podolske/back-ends/openssh.config > /tmp/openssh.config'
+      when: ansible_facts['distribution'] == "Rocky"
+#      notify: copy_openssh
+#  handlers:
+#    - name: copy_openssh
+#      ansible.builtin.copy:
+#         remote_src: true
+#         src: /etc/crypto-policies/back-ends/openssh.config
+#         dest: /etc/crypto-policies/back-ends/openssh.config.orig
+#      notify: new_openssh
+#    - name: new_openssh
+#      ansible.builtin.copy:
+#         remote_src: true
+#         src: /tmp/openssh.config
+#         dest: /etc/crypto-policies/back-ends/openssh.config
+#      notify: restart_sshd
+
+#    - name: restart_sshd
+#      service:
+#        name: sshd
+#        state: restarted
