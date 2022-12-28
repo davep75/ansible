@@ -1,0 +1,32 @@
+---
+- name: Remove diffie-hellman-group-exchange-sha1 
+  hosts: motbuntu
+  gather_facts: true
+  become: true
+  tasks:
+    - name: copy over diffie.awk
+      copy:
+        src: diffie.awk
+        dest: /tmp/diffie.awk
+    - name: Edit openssh.config
+      shell: '/usr/bin/awk -f /tmp/diffie.awk < /etc/crypto-policies/back-ends/openssh.config > /tmp/openssh.config'
+      when: ansible_facts['distribution'] == "Rocky"
+      notify: copy_openssh
+  handlers:
+    - name: copy_openssh
+      ansible.builtin.copy:
+         remote_src: true
+         src: /etc/crypto-policies/back-ends/openssh.config
+         dest: /etc/crypto-policies/back-ends/openssh.config.orig
+      notify: new_openssh
+    - name: new_openssh
+      ansible.builtin.copy:
+         remote_src: true
+         src: /tmp/openssh.config
+         dest: /etc/crypto-policies/back-ends/openssh.config
+#      notify: restart_sshd
+
+#    - name: restart_sshd
+#      service:
+#        name: sshd
+#        state: restarted
