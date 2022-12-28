@@ -1,0 +1,21 @@
+
+---
+- name: Install nagios client using salt
+#  become: true
+  hosts: motbuntu
+  gather_facts: true
+  tasks:
+# Check if NRPE has been installed
+    - name: check nrpe service
+      shell: systemctl is-active -q nagios-nrpe-server.service
+      register: nrpe_active
+      ignore_errors: true
+      when: ansible_distribution == "Ubuntu"
+
+# Install NRPE via salt-call 
+    - name: install and configure NRPE
+      shell: /usr/bin/salt-call state.sls lgit.prod.nrpe test=false
+      register: instllnrpe_result
+      ignore_errors: true
+      when: (ansible_distribution == "Ubuntu" and nrpe_active.rc != 0)
+#  tags: nrpe
