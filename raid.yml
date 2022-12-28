@@ -1,0 +1,57 @@
+---
+- name: Add Raid and IPMI monitoring capability
+#  become: true
+  hosts: motbuntu
+  gather_facts: true
+  tasks:
+
+## if physical, then enable raid_check
+#- name: Copy check_raid.pl.ilclbld to check_raid.pl
+#  shell: /bin/cp -f /usr/lib/nagios/plugins/contrib/check_raid.pl.ilclbld /usr/lib/nagios/plugins/contrib/check_raid.pl
+#  ignore_errors: True
+#  when: (ansible_virtualization_role == "host" and ansible_distribution == "Ubuntu")
+#  tags: nrpe
+#
+
+
+  - name: Install ipmitool package
+    apt:
+      name: ipmitool
+    when: (ansible_virtualization_role == "host" and ansible_distribution == "Ubuntu")
+#    tags: ipmitool
+
+
+  - name: HWRaid key present
+    apt_key:
+      id: 23B3D3B4
+      url: http://hwraid.le-vert.net/ubuntu/hwraid.le-vert.net.gpg.key
+      state: present
+    when: (ansible_virtualization_role == "host" and ansible_distribution == "Ubuntu")
+#  tags: megacli
+
+  - name: Add MegaCLI tool set repo
+    apt_repository:
+      repo: deb http://hwraid.le-vert.net/ubuntu focal main
+      state: present
+      filename: 'hwraid'
+    when: (ansible_virtualization_role == "host" and ansible_distribution == "Ubuntu")
+#  tags: megacli
+
+  - name: Install MegaCLI tool set packages
+    apt:
+      update_cache: yes
+      name: "{{ packages }}"
+    vars:
+      packages:
+      - megacli
+      - megaclisas-status
+    when: (ansible_virtualization_role == "host" and ansible_distribution == "Ubuntu")
+#  tags: megacli
+
+
+  - name: Install openipmi package
+    apt:
+      name: openipmi
+    when: (ansible_virtualization_role == "host" and ansible_distribution == "Ubuntu")
+#    tags: openipmi
+
