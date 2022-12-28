@@ -1,0 +1,102 @@
+---
+- name: Deploy salt-minion
+  hosts: motbuntu
+#  become: yes
+
+# tasks file for OS-Post
+#- name: Force facts gathering
+#  setup:
+#  tags: always
+  tasks:
+
+# got scrogged somewhere along the way
+# run apt update and apt upgrade
+#    - name: run apt dist-upgrade
+#      apt:
+#        upgrade: dist
+#        update_cache: yes
+#        dpkg_options: 'force-confold,force-confdef'
+#      when: ansible_distribution == "Ubuntu"
+
+## Install and configure salt-minion
+#    - name: repo.saltstack.com key present
+#      apt_key:
+#        id: de57bfbe
+#        url: https://repo.saltstack.com/py3/ubuntu/16.04/amd64/latest/SALTSTACK-GPG-KEY.pub
+#        state: present
+#      when: ansible_distribution == "Ubuntu"
+##  tags: minion
+#
+## Add specified repository into sources list for 20.04
+#    - name: add saltstack repo
+#      apt_repository:
+#        repo: deb [arch=amd64] http://repo.saltstack.com/py3/ubuntu/16.04/amd64/latest focal main
+#        state: present
+#        filename: 'saltstack'
+#      when: ansible_distribution == "Ubuntu"
+##  tags: minion
+
+#    - name: Install latest version of "salt-minion"
+#      apt:
+#        update_cache: yes
+#        name: salt-minion
+#        state: latest
+#      when: ansible_distribution == "Ubuntu"
+##  tags: minion
+
+    - name: Enable salt-minion.service
+      service:
+        name: salt-minion
+        enabled: true
+        state: stopped
+      when: ansible_distribution == "Ubuntu"
+#  tags: minion
+
+    - name: Populate minion_id
+      shell: /bin/hostname -s > /etc/salt/minion_id
+      when: ansible_distribution == "Ubuntu"
+#  tags: minion
+
+    - name: Copy file of /etc/salt/minion
+      copy:
+        src: files/minion
+        dest: /etc/salt/minion
+        owner: root
+        group: root
+        mode: 0644
+      when: ansible_distribution == "Ubuntu"
+#  tags: minion
+
+    - name: polulate save PKI if there is /var/tmp/restore/etc/salt/pki
+      shell: |
+        if [ -d /var/tmp/restore/etc/salt/pki ]
+        then
+          /bin/cp -r /var/tmp/restore/etc/salt/pki /etc/salt/
+        else
+          exit 0
+        fi
+      args:
+        executable: /bin/bash
+        warn: no
+      when: ansible_distribution == "Ubuntu"
+#  tags: minion
+
+
+    - name: Restart salt-minion.service
+      service:
+        name: salt-minion
+        state: restarted
+      when: ansible_distribution == "Ubuntu"
+#  tags: minion
+
+# won't work until this is a role (or handler added)
+#    - name: Accept minion_key on va32lsalt01
+#      shell: /usr/bin/salt-key -y -a {{ inventory_hostname_short }}
+#      delegate_to: "{{ groups['saltmasters'][0] }}"
+#        register: saltkey_result
+#        ignore_errors: true
+#      vars:
+#        - ansible_ssh_user: root
+#        - ansible_ssh_private_key_file: "{{ ROOT_USER_PRIVATE_KEY }}"
+#      when: ansible_distribution == "Ubuntu"
+#  tags: minion
