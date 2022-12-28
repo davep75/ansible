@@ -18,10 +18,39 @@
          line: 'server ntp1.mot.com'
        notify: restart_chronyd
        when: ansible_facts['distribution'] == "RedHat"
+
+
+     - name: Install Ubuntu chrony package
+       apt:
+         name: chrony
+         state: latest
+       when: ansible_distribution == "Ubuntu"
+
+     - name: Copy /etc/chrony/chrony.conf
+       copy:
+         src: files/chrony.conf
+         dest: /etc/chrony/chrony.conf
+         owner: root
+         group: root
+         mode: 0644
+       notify: restart_chrony
+       when: ansible_distribution == "Ubuntu"
+
+     - name: Enable service on Ubuntu
+       service:
+         name: chrony
+         enabled: true
+         state: started
+       when: ansible_distribution == "Ubuntu"
+
+
    handlers:
+     - name: restart_chrony 
+       service:
+         name: chrony
+         state: restarted
+
      - name: restart_chronyd
        service:
          name: chronyd
          state: restarted
-
-
