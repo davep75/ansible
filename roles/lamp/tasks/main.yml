@@ -1,6 +1,6 @@
 ---
 #- name: Deploy Web server
-#  hosts: coresite
+#  hosts: lamp
 ##  remote_user: ansibu1
 #  become: yes
 #
@@ -11,16 +11,16 @@
   - name: Installing MySQL package
     yum:
       name:
-#      - mariadb-server
-#      - mariadb-devel
-#      - mariadb-connector-odbc
-#      - mariadb-server-utils
+      - mariadb-server
+      - mariadb-devel
+      - mariadb-connector-odbc
+      - mariadb-server-utils
       - python3-PyMySQL
       - php
       state: latest
 
   - name: Start and Enable MySQL Service
-    service: name=mysqld state=started
+    service: name=mariadb state=started
 
   - name: Update MySQL root password
     mysql_user:
