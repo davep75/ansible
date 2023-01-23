@@ -1,5 +1,5 @@
 ---
-- hosts: mart
+- hosts: cmdb
   tasks:
     - name: backup mysql 
       shell: mysqldump -a -u cmdb cmdb > /home/podolske/cmdb/{{ dump_file }}
