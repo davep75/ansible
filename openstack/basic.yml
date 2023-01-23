@@ -8,44 +8,19 @@
     - name: update cache
       apt:
         update_cache: yes
-    - name: install packages
-      apt:
-        pkg:
-        - bridge-utils
-        - debootstrap
-        - ifenslave
-        - ifenslave-2.6
-        - lsof
-        - lvm2
-        - ntpdate
-        - openssh-server
-        - sudo
-        - tcpdump
-        - vlan
-        - python3
-        - build-essential
-        - python3-dev
-        - ipxe-qemu
-        - python3-virtualenv
-        - lldpd
-        - libstdc++5
-        - libxrender1
-        - libxtst6
-        - libxi6
-        - x11-common
-        - python2.7-minimal
-        - numactl
-        - python3-pkgconfig
-        - cgroup-lite
-        - icu-devtools
-        - libicu-dev
-        - apt-transport-https
-        - cmake-data
-        - cmake
-        - libsystemd-dev
-        - ubuntu-cloud-keyring
+    - name: copy /tmp/basic.sh
+      copy:
+        src: basic.sh
+        dest: /tmp/basic.sh
+        mode: 0755
+    - name: execute basic.sh
+      shell: "/tmp/basic.sh"
+      register: basic
+    - debug: var=basic.stdout_lines
+
     - name: python2 symbolic link
       ansible.builtin.file:
         src: /usr/bin/python2.7
         dest: /usr/bin/python2
         state: link
+
