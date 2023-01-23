@@ -3,7 +3,7 @@
       ansible.builtin.user:
         name: podolske
         uid: 18480
-        password: "$6$azorvBkq1Phk6ZSs$zyEuuPbxWn3NxRvy7TiHRlRWm9/Gv7Jz6XEZ9Ncd3XErSqVPJt5aZeAy2Bb6pLanF6.BJJoGqPVPwzMHzt2j80"
+        password: "$6$OkvxJs7unetFQCEq$1MUwUqfmoFog935CBuiTTJvzjlmGMDozSpcpqT/kFpTCGpDz0p/96IuxKqZNIDHxRCVvvquj8qR58SB7aeRF5/"
         group: wheel
         comment: "Dave Podolske"
         home: /home/podolske
