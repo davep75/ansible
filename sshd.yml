@@ -9,12 +9,18 @@
         name: sshd
         enabled: true
         state: started
-    - name: Edit SSHD Config
+    - name: Edit SSHD PermitRootLogin 
       lineinfile:
         path: /etc/ssh/sshd_config
         regexp: '^PermitRootLogin'
         insertafter: '#PermitRootLogin yes'
         line: 'PermitRootLogin yes '
+      notify: restart_sshd
+    - name: Edit SSHD PubkeyAuthentication
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#PubkeyAuthentication'
+        line: 'PubkeyAuthentication yes '
       notify: restart_sshd
   handlers:
     - name: restart_sshd
