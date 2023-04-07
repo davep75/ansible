@@ -1,6 +1,6 @@
 ---
 - name:  podolske role test
-  hosts: motbuntu
+  hosts: splunk
   gather_facts: true
   roles:
     - podolske
