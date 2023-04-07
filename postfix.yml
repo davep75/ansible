@@ -1,7 +1,7 @@
 ---
  - name: Restart postfix.service after changing /etc/postfix/main.cf
 #   become: true
-   hosts: motbuntu
+   hosts: splunk
    gather_facts: true
    tasks:
      - name: Create relay_passwd file
@@ -21,6 +21,11 @@
          path: /etc/postfix/main.cf
          regexp: '^inet_interfaces = localhost'
          replace: 'inet_interfaces = $myhostname, localhost'
+     - name: Set protocols
+       replace:
+         path: /etc/postfix/main.cf
+         regexp: '^inet_protocols = all'
+         replace: 'inet_protocols = ipv4'
      - name: Set domain
        lineinfile:
          path: /etc/postfix/main.cf
