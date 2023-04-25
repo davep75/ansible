@@ -46,3 +46,12 @@
         line: "export PS1='$HOSTNAME:${PWD}# '"
     - name: complete root.bashrc
       shell: "tail -2 ~podolske/.bashrc >> ~podolske/root.bashrc"
+    - name: create /etc/sudoers.d/podolske
+      file: 
+        path: /etc/sudoers.d/podolske
+        state: touch
+        mode: 0440
+    - name: update podolske in sudoers.d
+      lineinfile:
+        path:  /etc/sudoers.d/podolske
+        line: "podolske ALL=(ALL) NOPASSWD:ALL"
