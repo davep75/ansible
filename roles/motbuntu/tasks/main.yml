@@ -15,3 +15,16 @@
         insertafter: '#pool'
         line: 'server ntp1.mot.com'
       notify: restart_chronyd
+
+    - name: root account password 
+      ansible.builtin.user:
+        name: root
+        password: "$6$c3d/J5uL4lUiPDYU$UPeYw099g7BpZR4/MXa3vF58OO/d8KDjuJkcViwZa34S1qYNqQ6N6PcmHkBUkh8IyhWQFp3pn72aV7fV5AVUh."
+        group: root
+        state: present
+      when: ansible_facts['distribution'] == "Rocky"
+ 
+    - name: liveuser account lock 
+      ansible.builtin.user:
+        name: liveuser
+        password_lock: yes
