@@ -20,3 +20,7 @@ INSERT INTO `servers` (`sn`, `servname`, `ip`, `location`, `env`, `remarks`) VAL
 (1, 'ansible-master.techarkit.local', '192.168.2.200', 'India', 'Development', 'Ansible Development Master'),
 (2, 'node2.techarkit.local', '192.168.2.201', 'India', 'Development', 'Ansible Node'),
 (3, 'node3.techarkit.local', '192.168.2.202', 'India', 'Development', 'Ansible Node');
+
+-- Creating nagios_user for MySQL monitoring
+CREATE USER 'nagios_user'@'%' IDENTIFIED BY '6rac3amA';
+FLUSH PRIVILEGES;
