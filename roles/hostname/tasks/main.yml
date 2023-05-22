@@ -1,0 +1,17 @@
+---
+    - name: Set hostname
+      command: hostnamectl set-hostname ilmldave02
+    - name: Local Timezone
+      command: timedatectl set-timezone America/Chicago
+    - name: comment pool line in /etc/chrony.conf
+      replace:
+        path: /etc/chrony.conf
+        regexp: '(^pool*)'
+        replace: '#\1'
+
+    - name: Add ntp1 to chrony.conf
+      lineinfile:
+        path: /etc/chrony.conf
+        insertafter: '#pool'
+        line: 'server ntp1.mot.com'
+      notify: restart_chronyd
