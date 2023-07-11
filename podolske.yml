@@ -1,6 +1,6 @@
 ---
 - name:  podolske role test
-  hosts: motbuntu
+  hosts: podolske
   gather_facts: true
   roles:
     - podolske
