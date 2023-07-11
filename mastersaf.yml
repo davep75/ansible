@@ -1,0 +1,48 @@
+---
+- hosts: mastersaf
+  gather_facts: true
+  tasks:
+    - name: Add group for arb133 
+      ansible.builtin.group:
+        name: arb133
+        gid: 35418
+    - name: Add account for arb133 
+      ansible.builtin.user:
+        name: arb133
+        uid: 4008
+        gid: 4008
+        comment: "Ricardo Luiz Bonfim"
+        home: /home/arb133
+        state: present
+    - name: Add group for ftpmsaf
+      ansible.builtin.group:
+        name: ftpmsaf
+        gid: 35422
+    - name: Add account for wdg021 
+      ansible.builtin.user:
+        name: wdg021
+        uid: 35419
+        gid: 54318
+        comment: "Daniela Gomes"
+        home: /home/wdg021
+        state: present
+    - name: Add group for ftpmsaflenovo
+      ansible.builtin.group:
+        name: ftpmsaflenovo
+        gid: 35420
+    - name: Add account for ftpmsaflenovo 
+      ansible.builtin.user:
+        name: ftpmsaflenovo
+        uid: 35420
+        gid: 35420
+        comment: "FTP Msaf Lenovo"
+        home: /home/ftpmsaflenovo
+        state: present
+    - name: Add account for lcolobia 
+      ansible.builtin.user:
+        name: lcolobia
+        uid: 35421
+        gid: 54318
+        comment: "Luciana Colobialli"
+        home: /home/lcolobia
+        state: present
