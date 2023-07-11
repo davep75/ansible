@@ -1,0 +1,48 @@
+---
+ - name: Prepare server to upgrade from RHEL 7 to 8
+   hosts: leapp
+   gather_facts: true
+   tasks:
+#     - name: disable and stop Nagios 
+#       service: name=nrpe state=stopped enabled=no
+#     - name: ensure Nagios is uninstalled
+#       yum: 
+#         name: nrpe,nagios-plugins-*,nagios-common
+#         state: absent
+#     - name: disable and stop Salt minion 
+#       service: name=salt-minion state=stopped enabled=no
+#     - name: ensure Salt is uninstalled
+#       yum: 
+#         name: salt-minion,salt
+#         state: absent
+     - name: remove Salt repo
+       ansible.builtin.file:
+         path: /etc/yum.repos.d/salt-py3-latest.repo 
+         state: absent
+
+#  - name: disable pmp_event on apache
+#    shell: "a2dismod mpm_event"
+#    notify:
+#    - restart apache2
+#  - name: enable cgi on apache
+#    shell: "a2enmod mpm_prefork cgi"
+#    notify:
+#    - restart apache2
+#  - name: enable and start Apache 
+#    service: name=apache2 state=started enabled=yes
+#  - name: ensure pip is installed
+#    apt: 
+#      name: ['python-pip']
+#      state: present
+#    when: ansible_facts['distribution'] == "Ubuntu"
+#  - name: install pymysql module
+#    pip: name=pymysql executable=pip
+#    when: ansible_facts['distribution'] == "Ubuntu"
+#  - name: add a test directory
+#    file: 
+#      path: /var/www/test/
+#      state: directory
+#  - name: add index file
+#    copy: src=index.py dest=/var/www/test/index.py mode=755
+#    notify:
+#    - restart apache2
