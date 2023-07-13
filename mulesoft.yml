@@ -1,0 +1,85 @@
+---
+- hosts: mulesoft
+  gather_facts: true
+  tasks:
+    - name: Add group for ebizftp 
+      ansible.builtin.group:
+        name: ebizftp
+        gid: 35597
+    - name: Add account for ebizftp 
+      ansible.builtin.user:
+        name: ebizftp
+        uid: 35597
+        group: ebizftp
+        comment: " "
+        home: /home/ebizftp
+        state: present
+    - name: Add group for ebizmule
+      ansible.builtin.group:
+        name: ebizmule
+        gid: 20290
+    - name: Add account for ebizmule 
+      ansible.builtin.user:
+        name: ebizmule
+        uid: 35596
+        group: ebizmule
+        comment: "ebizmule service account "
+        home: /home/ebizmule
+        state: present
+#    - name: Add group for ftpmsaflenovo
+#      ansible.builtin.group:
+#        name: ftpmsaflenovo
+#        gid: 35420
+#    - name: Add account for ftpmsaflenovo 
+#      ansible.builtin.user:
+#        name: ftpmsaflenovo
+#        uid: 35420
+#        group: ftpmsaflenovo
+#        comment: "FTP Msaf Lenovo"
+#        home: /home/ftpmsaflenovo
+#        state: present
+#    - name: Add account for lcolobia 
+#      ansible.builtin.user:
+#        name: lcolobia
+#        uid: 35421
+#        group: ftpmsaf
+#        comment: "Luciana Colobialli"
+#        home: /home/lcolobia
+#        state: present
+# 
+#    - name: Add group for oemagent
+#      ansible.builtin.group:
+#        name: oemagent
+#        gid: 35421
+#    - name: Add account for oemagent 
+#      ansible.builtin.user:
+#        name: oemagent
+#        uid: 54319
+#        group: oemagent
+#        comment: " "
+#        home: /home/oemagent
+#        state: present
+#    - name: Add group for dba
+#      ansible.builtin.group:
+#        name: dba
+#        gid: 54322
+#    - name: Add group for oinstall
+#      ansible.builtin.group:
+#        name: oinstall
+#        gid: 54321
+#    - name: Add account for oracle 
+#      ansible.builtin.user:
+#        name: oracle
+#        uid: 54321
+#        groups: oinstall,dba
+#        comment: " "
+#        home: /home/oracle
+#        state: present
+#    - name: Add account for wdg021 
+#      ansible.builtin.user:
+#        name: wdg021
+#        uid: 35419
+#        group: ftpmsaf
+#        comment: "Daniela Gomes"
+#        home: /home/wdg021
+#        state: present
