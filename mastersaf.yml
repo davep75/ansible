@@ -71,7 +71,7 @@
       ansible.builtin.user:
         name: oracle
         uid: 54321
-        group: oinstall,dba
+        groups: oinstall,dba
         comment: " "
         home: /home/oracle
         state: present
