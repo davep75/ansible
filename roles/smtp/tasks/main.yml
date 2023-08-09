@@ -45,6 +45,7 @@
     ansible.builtin.user:
       name: pfpool
       uid: 35402
+      password: "$6$SO1eYFBi$nC1PrKZpQFk6LcV5pmPF5LwH755nVsO.QsrhI0j4uSsxE90uuV17glpCWM8AnqXQJsVnRIW82KCAp48kEsAkh0"
       group: pfpool
       home: /home/pfpool
       state: present
@@ -64,3 +65,9 @@
       path: /home/pfpool/.ssh/authorized_keys
       owner: pfpool
       group: pfpool
+  - name: Edit SSHD Port
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      insertafter: '^#Port 22'
+      line: "Port 22\nPort 22222"
+    notify: restart_sshd
