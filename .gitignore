@@ -1,5 +1,6 @@
 *.old
 afile-2nd-pass.txt
+ansible.log
 .bash_history_ansible
 distro.old
 distro.txt
