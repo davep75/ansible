@@ -1,21 +1,13 @@
 ---
-- name: commands based on distribution
+- name: find the distribution
   hosts: all
   gather_facts: true
   tasks:
-    - name: CentOS based
-      debug: var=ansible_facts 
-#        msg: "Os is {{  distribution }}"
-      when: ansible_facts['distribution'] == "CentOS"
-    - name: Rocky based
-      debug:  var=ansible_facts
-#        msg: "Os is {{  distribution }}"
-      when: ansible_facts['distribution'] == "Rocky"
-    - name: Oracle based
-      debug:  var=ansible_facts
-#        msg: "Os is {{  distribution }}"
-      when: ansible_facts['distribution'] == "OracleLinux"
-    - name: Ubuntu based
-      debug:  var=ansible_facts
-#        msg: "Os is {{  distribution }}"
-      when: ansible_facts['distribution'] == "Ubuntu"
+    - name: Distribution
+      debug: msg="{{ ansible_distribution }}"
+    - name: Distribution version
+      debug: msg="{{ ansible_distribution_version }}"
+    - name: Distribution major version
+      debug: msg="{{ ansible_distribution_major_version }}"
+    - name: OS family
+      debug: var=ansible_os_family
