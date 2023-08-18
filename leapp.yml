@@ -1,0 +1,6 @@
+---
+ - name: Prepare server to upgrade from RHEL 7 to 8
+   hosts: leapp
+   gather_facts: true
+   roles:
+     - name: leapp

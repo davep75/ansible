@@ -17,7 +17,6 @@ ilccentos7t01
 [coresite]
 ilcldave01
 ilcldave02
-ilcldave04
 [lamp]
 ilcldave03
 [webserver]
@@ -43,7 +42,7 @@ ilmldave01
 [openstack]
 ilcdhcp4201
 [rocky]
-ilmldave02
+ilmldave01
 [redhat]
 va32lforeman01
 [splunk]
@@ -51,10 +50,12 @@ va32ldave03
 [smtp]
 va32lmmrp03
 [podolske]
-va32ldave03
+ilclsplunkndx03
 [wildfly]
 va32lappnwildfly05
 [mastersaf]
 va32ldbnmsf02
 [mulesoft]
 100.64.186.230
+[leapp]
+va32ldave04

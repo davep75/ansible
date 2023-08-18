@@ -1,18 +1,18 @@
 ---
-#    - name: install mysql and python3-mysqldb
-#      apt: 
-#        name: ['python3-mysqldb', 'mysql-server']
-#        update_cache: yes
-#        cache_valid_time: 3600
-#        state: present
-#      when: ansible_facts['distribution'] == "Ubuntu"
-#    - name: start MySQL service
-#      shell: "systemctl start mysql"
-#    - name: ensure MySQL enabled
-#      service: 
-#        name: mysql
-#        state: started
-#        enabled: true
+    - name: install mysql and python3-mysqldb
+      apt: 
+        name: ['python3-mysqldb', 'mysql-server']
+        update_cache: yes
+        cache_valid_time: 3600
+        state: present
+      when: ansible_facts['distribution'] == "Ubuntu"
+    - name: start MySQL service
+      shell: "systemctl start mysql"
+    - name: ensure MySQL enabled
+      service: 
+        name: mysql
+        state: started
+        enabled: true
     - name: update MySQL root password
       mysql_user:
         name: root
