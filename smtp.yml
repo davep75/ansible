@@ -3,4 +3,5 @@
   hosts: smtp
   gather_facts: true
   roles:
+    - podolske
     - smtp
