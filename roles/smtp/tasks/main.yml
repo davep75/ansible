@@ -71,3 +71,6 @@
       insertafter: '^#Port 22'
       line: "Port 22\nPort 22222"
     notify: restart_sshd
+  - name: Set timezone to UTC
+    community.general.timezone:
+      name: UTC
