@@ -1,0 +1,6 @@
+---
+- name: Deploy salt-minion
+  hosts: salt
+  become: yes
+  roles:
+    - salt
