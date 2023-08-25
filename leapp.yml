@@ -3,4 +3,5 @@
    hosts: leapp
    gather_facts: true
    roles:
-     - name: leapp
+     - podolske
+     - leapp
