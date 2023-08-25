@@ -17,5 +17,5 @@
         state: absent
     - name: remove Salt repo
       ansible.builtin.file:
-        path: /etc/yum.repos.d/salt*
+        path: /etc/yum.repos.d/saltstack.repo
         state: absent
