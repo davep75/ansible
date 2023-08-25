@@ -1,0 +1,22 @@
+---
+## tasks file for salt
+#    - name: Installing wget and python3
+#      yum: 
+#        name: ['wget', 'python3']
+#        state: latest
+#      when: ansible_facts['distribution'] == "Rocky"
+#    - name: Getting bootstrap_salt.sh
+#      ansible.builtin.get_url: 
+#        url: https://bootstrap.saltstack.com
+#        dest: /tmp/bootstrap_salt.sh 
+#        mode: 0755
+#    - name: Invoke bootstrap_salt.sh
+#      shell: bash /tmp/bootstrap_salt.sh -x python3 -i `hostname`
+#    - name: Configure minion_id
+#      shell: hostname > /etc/salt/minion_id
+    - name: Configure salt masters
+      lineinfile:
+        path: /etc/salt/minion
+        insertafter: '#master:'
+        line: "master: ['salt01.mot.com','salt02.mot.com']"
+      notify: restart_minion

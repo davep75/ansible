@@ -1,0 +1,7 @@
+---
+# handlers file for salt
+
+    - name: restart_minion
+      service:
+        name: salt-minion
+        state: restarted
