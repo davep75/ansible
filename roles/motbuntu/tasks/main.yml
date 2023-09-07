@@ -28,3 +28,8 @@
       ansible.builtin.user:
         name: liveuser
         password_lock: yes
+    - name: disable firewall 
+      service:
+        name: firewalld
+        state: stopped
+        enabled: false
