@@ -1,0 +1,12 @@
+---
+ - name: remove legacy appadmin user entirely
+   hosts: motbuntu
+   vars:
+     user_name:  appadmin
+   tasks:
+    - name: remove account for appadmin 
+      ansible.builtin.user:
+        name: appadmin
+        state: absent
+        remove: yes
+      when: ansible_facts['distribution'] == "Rocky"
