@@ -4,11 +4,41 @@
    hosts: wildfly
    gather_facts: true
    tasks:
-     - name: Copy /home/podolske/template.txt 
-       template:
-         dest: /home/podolske/template.txt
-         src: template.j2
-     - name: create /t0[1-9] /t1[01]
-       ansible.builtin.file:
-         path: /t01
-         state: directory
+     - name: Add group for ebiz
+       ansible.builtin.group:
+         name: ebiz
+         gid: 20002
+     - name: Add account for ebizjboss
+       ansible.builtin.user:
+         name: ebizjboss
+         uid: 35211
+         group: ebiz
+         comment: "Suresh Kumar Gubbala"
+         home: /home/ebizjboss
+         state: present
+     - name: Add group for sureshkg
+       ansible.builtin.group:
+         name: sureshkg
+         gid: 35728
+     - name: Add account for sureshkg
+       ansible.builtin.user:
+         name: sureshkg
+         uid: 35728
+         group: sureshkg
+         comment: "Suresh Kumar Gubbala"
+         home: /home/sureshkg
+         state: present
+     - name: Add group for varunp
+       ansible.builtin.group:
+         name: varunp
+         gid: 35675
+     - name: Add account for varunp
+       ansible.builtin.user:
+         name: varunp
+         uid: 35675
+         group: varunp
+         comment: "Varun Patel"
+         home: /home/varunp
+         state: present
+
+
