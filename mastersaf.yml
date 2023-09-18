@@ -2,6 +2,18 @@
 - hosts: mastersaf
   gather_facts: true
   tasks:
+    - name: Add group for aga014 
+      ansible.builtin.group:
+        name: aga014
+        gid: 20188
+    - name: Add account for aga014 
+      ansible.builtin.user:
+        name: aga014
+        uid: 35417
+        group: aga014
+        comment: "Giovana Arengue"
+        home: /home/aga014
+        state: present
     - name: Add group for arb133 
       ansible.builtin.group:
         name: arb133
@@ -21,7 +33,7 @@
     - name: Add account for ftpmsaf 
       ansible.builtin.user:
         name: ftpmsaf
-        uid: 54318
+        uid: 35422
         group: ftpmsaf
         comment: " "
         home: /home/ftpmsaf
