@@ -1,0 +1,17 @@
+# Beginn of nrpe
+Defaults:nrpe !requiretty
+nrpe ALL=(ALL) NOPASSWD:/usr/sbin/dmidecode
+nrpe ALL=(ALL) NOPASSWD:/usr/sbin/lsof
+nrpe ALL=(ALL) NOPASSWD:/sbin/fdisk -l
+nrpe ALL=(ALL) NOPASSWD:/sbin/dmsetup ls
+nrpe ALL=(ALL) NOPASSWD:/usr/sbin/crm_mon -1 -r -f
+nrpe ALL=(ALL) NOPASSWD:/usr/lib64/nagios/plugins/
+nrpe ALL=(ALL) NOPASSWD:/usr/lib64/nagios/plugins/contrib/
+nrpe ALL=(ALL) NOPASSWD:/usr/lib64/nagios/plugins/contrib/check_ipmi_chassis, /usr/bin/ipmitool
+nrpe ALL=(ALL) NOPASSWD:/usr/lib64/nagios/plugins/contrib/check_raid.pl
+nrpe ALL=(ALL) NOPASSWD:/usr/lib64/nagios/plugins/contrib2/check_crm
+nrpe ALL=(ALL) NOPASSWD:/usr/lib64/nagios/plugins/check_disk
+nrpe ALL=(ALL) NOPASSWD:/usr/lib64/nagios/plugins/contrib/check_sssctl.bash 
+nrpe,nagios ALL=(ALL) NOPASSWD:/usr/lib/nagios/plugins/contrib/check_megaraid_sas, /usr/lib/nagios/plugins/contrib/MegaCli64, /usr/lib/nagios/plugins/contrib/check_raidbattery.sh, /usr/sbin/smartctl, /usr/lib/nagios/plugins/contrib/check_bbu_learn.pl, /usr/lib/nagios/plugins/contrib/check_raid.pl, /usr/lib/nagios/plugins/contrib/check_md_raid.pl, /usr/lib/nagios/plugins/contrib/check_custom_smartd.pl, /usr/lib/nagios/plugins/contrib/check_eth_link.sh, /usr/sbin/megacli, /usr/sbin/hpacucli,/usr/lib64/nagios/plugins/contrib/check_ipmi_sensor.pl, /usr/lib64/nagios/plugins/contrib/check_postfix_mailqueue, /usr/lib64/nagios/plugins/contrib/check_docker
+# end of nrpe
+#
