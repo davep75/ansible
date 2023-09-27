@@ -19,7 +19,15 @@
       ansible.builtin.file:
         path: /etc/yum.repos.d/saltstack.repo
         state: absent
-    - name: copy script to setup repoa
+    - name: copy script to setup repo for Rocky
       ansible.builtin.copy:
         src: rocky-upgrade.sh
         dest: /tmp
+        mode: '0700'
+      when: ansible_facts['distribution'] == "CentOS"
+    - name: copy script to setup repo for RedHat
+      ansible.builtin.copy:
+        src: rhel-upgrade.sh
+        dest: /tmp
+        mode: '0700'
+      when: ansible_facts['distribution'] == "RedHat"
