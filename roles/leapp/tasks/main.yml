@@ -31,3 +31,8 @@
         dest: /tmp
         mode: '0700'
       when: ansible_facts['distribution'] == "RedHat"
+    - name: copy eval-ovl-size script
+      ansible.builtin.copy:
+        src: eval-ovl-size.py
+        dest: /tmp
+        mode: '0700'
