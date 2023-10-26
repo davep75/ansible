@@ -9,5 +9,6 @@
 echo $?
 # leapp answer --section remove_pam_pkcs11_module_check.confirm=True
 # modprobe -r pata_acpi
+# rm /etc/systemd/system/multi-user.target.wants/vncserver@:1.service
 # rpm -e --nodeps `rpm -qa | egrep 'el7\.' `
 
