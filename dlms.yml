@@ -1,0 +1,15 @@
+---
+- hosts: dlms
+  become: yes
+  tasks:
+    - name: Add group for dba
+      ansible.builtin.group:
+        name: dba
+        gid: 20047
+    - name: add account for e5734c (Jeff Sun)
+      ansible.builtin.user:
+        name: e5734c
+        uid: 35068
+        group: 20047
+        comment: "Jeff Sun"
+        state: present
