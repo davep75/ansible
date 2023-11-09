@@ -2,18 +2,6 @@
 - hosts: skywalker
   gather_facts: true
   tasks:
-    - name: Add group for dba 
-      ansible.builtin.group:
-        name: dba
-        gid: 20047
-    - name: Add account for e5734c 
-      ansible.builtin.user:
-        name: e5734c
-        uid: 35068
-        group: dba
-        comment: "Jeff Sun"
-        home: /home/e5734c
-        state: present
     - name: Add group for galmeida 
       ansible.builtin.group:
         name: galmeida
@@ -30,3 +18,15 @@
       ansible.builtin.group:
         name: skywalker
         gid: 20260
+    - name: Add group for git 
+      ansible.builtin.group:
+        name: git
+        gid: 20178
+    - name: Add account for git 
+      ansible.builtin.user:
+        name: git
+        uid: 35042
+        group: git
+        comment: "service account git"
+        home: /home/git
+        state: present
