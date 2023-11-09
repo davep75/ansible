@@ -1,0 +1,48 @@
+---
+- hosts: dba
+  gather_facts: true
+  tasks:
+    - name: Add group for dba 
+      ansible.builtin.group:
+        name: dba
+        gid: 20047
+    - name: Add account for e5734c 
+      ansible.builtin.user:
+        name: e5734c
+        uid: 35068
+        group: dba
+        comment: "Jeff Sun"
+        home: /home/e5734c
+        state: present
+    - name: Add account for dohchoi 
+      ansible.builtin.user:
+        name: dohchoi
+        uid: 35374
+        group: dba
+        comment: "Doh Choi"
+        home: /home/dohchoi
+        state: present
+    - name: Add account for gvb483 
+      ansible.builtin.user:
+        name: gvb483
+        uid: 35273
+        group: dba
+        comment: "Achuthan Jeyaraj"
+        home: /home/gvb483
+        state: present
+    - name: Add account for o2420c 
+      ansible.builtin.user:
+        name: o2420c
+        uid: 35384
+        group: dba
+        comment: "Selvakumar Ganapathy"
+        home: /home/o2420c
+        state: present
+    - name: Add account for ravadha1 
+      ansible.builtin.user:
+        name: ravadha1
+        uid: 35396
+        group: dba
+        comment: "Ramesh Avadhanula"
+        home: /home/ravadha1
+        state: present
