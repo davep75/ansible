@@ -46,3 +46,20 @@
         comment: "Ramesh Avadhanula"
         home: /home/ravadha1
         state: present
+    - name: Add group for dbpccsvc 
+      ansible.builtin.group:
+        name: dbpccsvc
+        gid: 20273
+    - name: Add account for dbpccsvc 
+      ansible.builtin.user:
+        name: dbpccsvc
+        uid: 4007
+        group: dbpccsvc
+        comment: "DBA portal service account"
+        home: /home/dbpccsvc
+        state: present
+    - name: copy dbpccsvc sudoers.d
+      ansible.builtin.copy:
+        src: dbpccsvc
+        dest: /etc/sudoers.d
+        mode: '0440'
