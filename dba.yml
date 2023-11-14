@@ -63,3 +63,19 @@
         src: dbpccsvc
         dest: /etc/sudoers.d
         mode: '0440'
+    - name: Copy /home/dbpccsvc/.ssh/authorized_keys
+      ansible.builtin.copy:
+        src: files/dbpccsvc_keys
+        dest: /home/dbpccsvc/.ssh/authorized_keys
+        mode: 0600
+    - name: Fix /home/dbpccsvc/.ssh/ ownership and permission
+      file:
+        path: /home/dbpccsvc/.ssh
+        owner: dbpccsvc
+        group: dbpccsvc
+        mode: 0700
+    - name: Fix /home/dbpccsvc/.ssh/authorized_keys ownership 
+      file:
+        path: /home/dbpccsvc/.ssh/authorized_keys
+        owner: dbpccsvc
+        group: dbpccsvc
