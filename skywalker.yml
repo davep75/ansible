@@ -30,3 +30,8 @@
         comment: "service account git"
         home: /home/git
         state: present
+    - name: copy skywalker sudoers.d
+      ansible.builtin.copy:
+        src: skywalker
+        dest: /etc/sudoers.d
+        mode: '0400'
