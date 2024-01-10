@@ -4,7 +4,7 @@
 # subscription-manager list --consumed
 # subscription-manager repos --enable rhel-7-server-rpms
 # subscription-manager repos --enable rhel-7-server-extras-rpms
-# subscription-manager release unset
+# subscription-manager release --unset
 /usr/bin/yum install -y leapp-upgrade 
 echo $?
 # leapp answer --section remove_pam_pkcs11_module_check.confirm=True
