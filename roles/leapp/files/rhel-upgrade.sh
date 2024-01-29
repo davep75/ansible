@@ -12,3 +12,4 @@ echo $?
 # rm /etc/systemd/system/multi-user.target.wants/vncserver@:1.service
 # rpm -e --nodeps `rpm -qa | egrep 'el7\.' `
 
+# wget -O bootstrap_salt.sh https://bootstrap.saltstack.com
