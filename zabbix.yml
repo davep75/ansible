@@ -1,0 +1,7 @@
+---
+- name:  zabbix role test
+  hosts: zabbix
+  gather_facts: true
+  roles:
+    - zabbix
+

@@ -1,0 +1,11 @@
+---
+    - name: Add account for podolske 
+      ansible.builtin.user:
+        name: podolske
+        uid: 18480
+        password: "$6$VVEPLlQ15R.OUNjG$C5lbi2reQhFmosESGF7UDXLbPtd6uvvTuHYPG7zcNT9TfTmuORhCAYXU66KBDUzUFxQzYDMLOxZby4H.Rurbq/"
+        group: wheel
+        comment: "Dave Podolske"
+        home: /home/podolske
+        state: present
+#      when: ansible_facts['distribution'] == "Rocky"

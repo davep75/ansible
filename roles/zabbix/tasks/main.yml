@@ -1,0 +1,11 @@
+# tasks file for zabbix
+---
+    - name: Add account for zabbix 
+      ansible.builtin.user:
+        name: zabbix
+        group: zabbix
+        comment: "Zabbix Monitoring System"
+        home: /var/lib/zabbix
+        shell: /sbin/nologin
+        state: present
+#      when: ansible_facts['distribution'] == "Rocky"
