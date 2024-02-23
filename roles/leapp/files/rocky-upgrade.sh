@@ -8,3 +8,4 @@ echo $?
 #  rpm -e --nodeps `rpm -qa | egrep 'el7\.' `
 # rm /etc/systemd/system/multi-user.target.wants/vncserver@:1.service
 # wget -O bootstrap_salt.sh https://bootstrap.saltstack.com
+# alternatives --set python /usr/bin/python3
