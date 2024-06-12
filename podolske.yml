@@ -1,7 +1,6 @@
 ---
-- name:  podolske role test
+- name: Podolske role test
   hosts: podolske
   gather_facts: true
   roles:
     - podolske
-

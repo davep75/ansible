@@ -1,5 +1,5 @@
 ---
-    - name: Add account for podolske 
+    - name: Add account for podolske
       ansible.builtin.user:
         name: podolske
         uid: 18480
@@ -10,48 +10,48 @@
         state: present
 #      when: ansible_facts['distribution'] == "Rocky"
     - name: Copy /home/podolske/.ssh/authorized_keys
-      template:
+      ansible.builtin.template:
         src: authorized_keys
         dest: /home/podolske/.ssh/
-        mode: 0600
+        mode: "0600"
     - name: Fix /home/podolske/.ssh/ ownership and permission
-      file:
+      ansible.builtin.file:
         path: /home/podolske/.ssh
         owner: podolske
-        mode: 0700
-    - name: Fix /home/podolske/.ssh/authorized_keys ownership 
-      file:
+        mode: "0700"
+    - name: Fix /home/podolske/.ssh/authorized_keys ownership
+      ansible.builtin.file:
         path: /home/podolske/.ssh/authorized_keys
         owner: podolske
     - name: Add custom prompt to .bashrc
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /home/podolske/.bashrc
         line: "export PS1='$HOSTNAME:${PWD}> '"
     - name: Add key binding to .bashrc
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /home/podolske/.bashrc
         line: 'set -o vi'
     - name: Turn off title update in .bashrc
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /home/podolske/.bashrc
         line: 'unset PROMPT_COMMAND'
-    - name: create /home/podolske/root.bashrc
-      file: 
+    - name: Create /home/podolske/root.bashrc
+      ansible.builtin.file:
         path: /home/podolske/root.bashrc
         state: touch
-        mode: 0755
-    - name: update prompt in root.bashrc
-      lineinfile:
-        path:  /home/podolske/root.bashrc
+        mode: "0755"
+    - name: Update prompt in root.bashrc
+      ansible.builtin.lineinfile:
+        path: /home/podolske/root.bashrc
         line: "export PS1='$HOSTNAME:${PWD}# '"
-    - name: complete root.bashrc
-      shell: "tail -2 ~podolske/.bashrc >> ~podolske/root.bashrc"
-    - name: create /etc/sudoers.d/podolske
-      file: 
+    - name: Complete root.bashrc
+      ansible.builtin.shell: "tail -2 ~podolske/.bashrc >> ~podolske/root.bashrc"
+    - name: Create /etc/sudoers.d/podolske
+      ansible.builtin.file:
         path: /etc/sudoers.d/podolske
         state: touch
-        mode: 0440
-    - name: update podolske in sudoers.d
-      lineinfile:
-        path:  /etc/sudoers.d/podolske
+        mode: "0440"
+    - name: Update podolske in sudoers.d
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers.d/podolske
         line: "podolske ALL=(ALL) NOPASSWD:ALL"
