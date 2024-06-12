@@ -5,44 +5,49 @@
    gather_facts: true
    tasks:
      - name: Create relay_passwd file
-       copy:
+       ansible.builtin.copy:
          content: "[smtp.mot.com] VA32-SMTP-SVC:wtts0Sitr"
          dest: /etc/postfix/relay_passwd
-         force: yes
-         mode: 0600
-       notify: create_postmap 
+         force: true
+         mode: "0600"
+       notify: Create_postmap
      - name: Set relayhost
-       replace:
+       ansible.builtin.replace:
          path: /etc/postfix/main.cf
          regexp: '^#relayhost = \[an.ip.add.ress\]'
          replace: 'relayhost = [smtp.mot.com]'
      - name: Set interfaces
-       replace:
+       ansible.builtin.replace:
          path: /etc/postfix/main.cf
          regexp: '^inet_interfaces = localhost'
          replace: 'inet_interfaces = $myhostname, localhost'
      - name: Set protocols
-       replace:
+       ansible.builtin.replace:
          path: /etc/postfix/main.cf
          regexp: '^inet_protocols = all'
          replace: 'inet_protocols = ipv4'
      - name: Set domain
-       lineinfile:
+       ansible.builtin.lineinfile:
          path: /etc/postfix/main.cf
          insertafter: '#mydomain = domain.tld'
          line: mydomain = mot.com
+     - name: Set origin
+       ansible.builtin.lineinfile:
+         path: /etc/postfix/main.cf
+         insertafter: '#myorigin = /etc/mailname'
+         line: 'myorigin = $myhostname'
      - name: Set hostname
-       lineinfile:
+       ansible.builtin.lineinfile:
          path: /etc/postfix/main.cf
          insertafter: '#myhostname = virtual.domain.tld'
          line: myhostname = {{ ansible_hostname }}.mot.com
-       notify: restart_postfix
+       notify: Restart_postfix
    handlers:
-     - name: restart_postfix
-       service:
+     - name: Restart_postfix
+       ansible.builtin.service:
          name: postfix.service
          state: restarted
-     - name: create_postmap
-       command:
+     - name: Create_postmap
+       ansible.builtin.command:
          chdir: /etc/postfix
          cmd: /usr/sbin/postmap /etc/postfix/relay_passwd
