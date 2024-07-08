@@ -1,0 +1,39 @@
+---
+#  tasks:
+  - name: Copy RPM to client
+    ansible.builtin.copy:
+      src: BESAgent-9.5.10.79-rhe6.x86_64.rpm
+      dest: /tmp
+      mode: '0644'
+
+  - name: Make /var/opt/BESClient
+    ansible.builtin.file:
+      path: /var/opt/BESClient
+      state: directory
+      mode: '0755'
+
+  - name: Copy besclient.config to client
+    ansible.builtin.copy:
+      src: besclient.config
+      dest: /var/opt/BESClient
+      mode: '0644'
+
+  - name: Installing BESAgent package
+    ansible.builtin.shell:
+      cmd: /usr/bin/rpm -ihv /tmp/BESAgent-9.5.10.79-rhe6.x86_64.rpm
+
+  - name: Make /etc/opt/BESClient
+    ansible.builtin.file:
+      path: /etc/opt/BESClient
+      state: directory
+      mode: '0755'
+
+  - name: Copy actionsite.afxm to client
+    ansible.builtin.copy:
+      src: actionsite.afxm
+      dest: /etc/opt/BESClient
+      mode: '0600'
+
+  - name: Start and Enable TEM 
+    ansible.builtin.shell:
+      cmd: /etc/init.d/besclient start

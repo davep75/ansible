@@ -1,0 +1,6 @@
+---
+- name: TEM role
+  hosts: TEM
+  gather_facts: true
+  roles:
+    - TEM
