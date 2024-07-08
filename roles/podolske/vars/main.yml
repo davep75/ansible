@@ -1,3 +1,3 @@
 ---
 # vars file for roles/podolske
-#
+podolske_encrypted_pass: "$6$BNH9M1V/Z1U.dBFb$UPYbDNYmDFs.4a45sPc1FqX7E/9QdNJfzeYI.Lywv22USlEUUCIsoNMDDYQLOcPLztELsM0W8aD3q2Prb1F5Q1"
