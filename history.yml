@@ -1,0 +1,11 @@
+---
+- name: Minimum password history
+  hosts: mart
+  gather_facts: true
+  tasks:
+    - name: append remember=8 to /etc/pam.d/system-auth
+      ansible.builtin.lineinfile:
+        path: /etc/pam.d/system-auth
+        regexp: '^(password    sufficient[ \t]+pam_unix.so.*)$'
+        line: '\1 remember=8'
+        backrefs: true
