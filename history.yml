@@ -1,11 +1,16 @@
 ---
-- name: Minimum password history
+- name: Minimum password history and retries
   hosts: mart
   gather_facts: true
   tasks:
-    - name: append remember=8 to /etc/pam.d/system-auth
+    - name: Append remember=8 to /etc/pam.d/system-auth
       ansible.builtin.lineinfile:
         path: /etc/pam.d/system-auth
         regexp: '^(password    sufficient[ \t]+pam_unix.so.*)$'
         line: '\1 remember=8'
         backrefs: true
+#    - name: Insert pam_tally2 /etc/pam.d/system-auth
+#      ansible.builtin.lineinfile:
+#        path: /etc/pam.d/system-auth
+#        insertbefore: '^(auth     required[ \t]+)pam_env.so$'
+#        line: '\1 pam_tally2.so deny=5 onerr=fail unlock_time=900'
