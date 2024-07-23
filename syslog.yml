@@ -1,6 +1,6 @@
 ---
 - name: Audit login events
-  hosts: mart
+  hosts: dlms
   gather_facts: true
   tasks:
     - name: Make sure /etc/rsyslog.conf loads omfile module
