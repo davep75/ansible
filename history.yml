@@ -1,6 +1,6 @@
 ---
 - name: Minimum password history and retries
-  hosts: mart
+  hosts: dlms
   gather_facts: true
   tasks:
     - name: Append remember=8 to /etc/pam.d/system-auth
