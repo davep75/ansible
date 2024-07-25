@@ -1,0 +1,6 @@
+---
+- name: Apply DLMS security tweaks
+  hosts: dlms
+  gather_facts: true
+  roles:
+    - rsyslog

@@ -1,0 +1,24 @@
+    - name: Turn off title update in .conf
+      ansible.builtin.lineinfile:
+        path: /etc/rsyslog.conf
+        line: 'unset PROMPT_COMMAND'
+    - name: Create /etc/rsyslog/root.conf
+      ansible.builtin.file:
+        path: /etc/rsyslog/root.conf
+        state: touch
+        mode: "0755"
+    - name: Update prompt in root.conf
+      ansible.builtin.lineinfile:
+        path: /etc/rsyslog/root.conf
+        line: "export PS1='$HOSTNAME:${PWD}# '"
+    - name: Complete root.conf
+      ansible.builtin.shell: "tail -2 ~rsyslog/.conf >> ~podolske/root.bashrc"
+    - name: Create /etc/sudoers.d/rsyslog
+      ansible.builtin.file:
+        path: /etc/sudoers.d/rsyslog
+        state: touch
+        mode: "0440"
+    - name: Update rsyslog in sudoers.d
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers.d/rsyslog
+        line: "rsyslog ALL=(ALL) NOPASSWD:ALL"

@@ -1,0 +1,16 @@
+- name: Make sure /etc/rsyslog.conf loads omfile module
+  ansible.builtin.lineinfile:
+    path: /etc/rsyslog.conf
+    line: 'module(load="builtin:omfile" Template="RSYSLOG_TraditionalFileFormat")'
+    insertafter: '# Use default timestamp format'
+    state: present
+- name: Make sure /etc/rsyslog.conf sends to splunk master
+  ansible.builtin.lineinfile:
+    path: /etc/rsyslog.conf
+    line: '*.info @10.62.109.187'
+    insertafter: EOF
+    state: present
+- name: Restart rsyslogd
+  ansible.builtin.service:
+    name: rsyslog
+    state: restarted
