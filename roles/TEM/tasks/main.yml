@@ -18,9 +18,9 @@
       dest: /var/opt/BESClient
       mode: '0644'
 
-  - name: Installing BESAgent package
-    ansible.builtin.shell:
-      cmd: /usr/bin/rpm -ihv /tmp/BESAgent-9.5.10.79-rhe6.x86_64.rpm
+#  - name: Installing BESAgent package
+#    ansible.builtin.shell:
+#      cmd: /usr/bin/rpm -ihv /tmp/BESAgent-9.5.10.79-rhe6.x86_64.rpm
 
   - name: Make /etc/opt/BESClient
     ansible.builtin.file:
