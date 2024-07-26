@@ -1,29 +1,29 @@
 ---
 - name: Manage SSHD
-  hosts: coresite
+  hosts: dlms
   gather_facts: false
   become: true
   tasks:
     - name: Ensure SSHD Started and Enabled
-      service:
+      ansible.builtin.service:
         name: sshd
         enabled: true
         state: started
-    - name: Edit SSHD PermitRootLogin 
-      lineinfile:
+    - name: Edit SSHD PermitRootLogin
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         regexp: '^PermitRootLogin'
         insertafter: '#PermitRootLogin yes'
-        line: 'PermitRootLogin yes '
-      notify: restart_sshd
-    - name: Edit SSHD PubkeyAuthentication
-      lineinfile:
-        path: /etc/ssh/sshd_config
-        regexp: '^#PubkeyAuthentication'
-        line: 'PubkeyAuthentication yes '
-      notify: restart_sshd
+        line: 'PermitRootLogin prohibit-password '
+      notify: Restart_sshd
+#    - name: Edit SSHD PubkeyAuthentication
+#      lineinfile:
+#        path: /etc/ssh/sshd_config
+#        regexp: '^#PubkeyAuthentication'
+#        line: 'PubkeyAuthentication yes '
+#      notify: restart_sshd
   handlers:
-    - name: restart_sshd
-      service:
+    - name: Restart_sshd
+      ansible.builtin.service:
         name: sshd
         state: restarted
