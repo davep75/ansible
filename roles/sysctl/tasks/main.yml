@@ -1,2 +1,6 @@
+---
 - name: Copy additional file to /etc/sysctl.d
-  ansible.
+  ansible.builtin.copy:
+    src: 98-sysctl.conf
+    dest: /etc/sysctl.d
+  notify: Reread_sysctl
