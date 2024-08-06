@@ -1,0 +1,17 @@
+---
+- name: Copy password-auth file to /etc/authselect/custom/nslcd
+  ansible.builtin.copy:
+    src: password-auth
+    dest: /etc/authselect/custom/nslcd
+    mode: "0644"
+- name: Copy system-auth file to /etc/authselect/custom/nslcd
+  ansible.builtin.copy:
+    src: system-auth
+    dest: /etc/authselect/custom/nslcd
+    mode: "0644"
+  notify: Reread_sysctl
+- name: Copy pwquality.conf file to /etc/security
+  ansible.builtin.copy:
+    src: pwquality.conf
+    dest: /etc/security
+    mode: "0644"

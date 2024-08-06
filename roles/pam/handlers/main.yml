@@ -1,0 +1,4 @@
+# handlers file for authselect
+#
+- name: Reselect
+  ansible.builtin.command: /bin/authselect select custom/nslcd --force
