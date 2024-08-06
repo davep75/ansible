@@ -1,6 +1,10 @@
 ---
-- name: Copy additional file to /etc/sysctl.d
-  ansible.builtin.copy:
-    src: 98-sysctl.conf
-    dest: /etc/sysctl.d
+- name: Add additional lines to /etc/sysctl.d/99-sysctl.conf
+  ansible.builtin.lineinfile:
+    path: /etc/sysctl.d/99-sysctl.conf
+    line: "{{ item }}"
+  loop:
+    - "net.ipv4.tcp_syncookies = 1"
+    - "net.ipv4.icmp_echo_ignore_broadcasts = 1"
+    - "net.ipv4.conf.all.accept_redirects = 0"
   notify: Reread_sysctl
