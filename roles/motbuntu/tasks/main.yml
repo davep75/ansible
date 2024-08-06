@@ -1,4 +1,7 @@
+# Note to self    add   setenforce 0  before changing any files
 ---
+    - name: Set permissive selinux
+      command: /usr/sbin/setenforce 0
     - name: Set hostname
       command: hostnamectl set-hostname podolske-motbuntu01
     - name: Local Timezone
