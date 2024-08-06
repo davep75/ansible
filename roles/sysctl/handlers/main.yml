@@ -1,4 +1,4 @@
 # handlers file for sysctl
 #
 - name: Reread_sysctl
-  ansible.builtin.shell: /usr/sbin/sysctl -p
+  ansible.builtin.command: /usr/sbin/sysctl -p
