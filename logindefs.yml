@@ -1,0 +1,21 @@
+# Note to self.  merge this with sshd.yml
+---
+- name: Manage /etc/login.defs for DLMS servers
+  hosts: motbuntu
+  gather_facts: true
+  tasks:
+    - name: Edit PASS_MIN_LEN
+      ansible.builtin.lineinfile:
+        path: /home/podolske/login.defs
+        regexp: '^PASS_MIN_LEN'
+        line: 'PASS_MIN_LEN  8'
+    - name: Edit PASS_MAX_DAYS
+      ansible.builtin.lineinfile:
+        path: /home/podolske/login.defs
+        regexp: '^PASS_MAX_DAYS'
+        line: 'PASS_MAX_DAYS   90'
+    - name: Edit PASS_MIN_DAYS
+      ansible.builtin.lineinfile:
+        path: /home/podolske/login.defs
+        regexp: '^PASS_MIN_DAYS'
+        line: 'PASS_MIN_DAYS   0'
