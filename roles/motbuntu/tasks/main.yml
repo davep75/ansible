@@ -3,7 +3,7 @@
     - name: Set permissive selinux
       command: /usr/sbin/setenforce 0
     - name: Set hostname
-      command: hostnamectl set-hostname podolske-motbuntu01
+      command: hostnamectl set-hostname ilmldave01
     - name: Local Timezone
       command: timedatectl set-timezone America/Chicago
     - name: comment pool line in /etc/chrony.conf
