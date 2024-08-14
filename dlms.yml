@@ -5,4 +5,4 @@
   roles:
     - rsyslog
     - sysctl
-    - pam
+#    - pam
