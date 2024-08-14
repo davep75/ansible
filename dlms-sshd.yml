@@ -1,7 +1,8 @@
+# Note to self.  merge this with sshd.yml
 ---
 - name: Manage sshd for DLMS servers
   hosts: dlms
-  gather_facts: false
+  gather_facts: true
   become: true
   tasks:
     - name: Edit sshd PermitRootLogin
