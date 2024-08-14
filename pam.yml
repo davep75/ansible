@@ -1,0 +1,30 @@
+---
+- name: Standalone playbook for pam modifications
+  hosts: dlms
+  tasks:
+  - name: Copy password-auth file to /etc/authselect/custom/nslcd
+    ansible.builtin.copy:
+      src: files/password-auth
+      dest: /etc/authselect/custom/nslcd
+      mode: "0644"
+  - name: Copy system-auth file to /etc/authselect/custom/nslcd
+    ansible.builtin.copy:
+      src: files/system-auth
+      dest: /etc/authselect/custom/nslcd
+      mode: "0644"
+      notify: 
+        - Reselect
+  - name: Copy pwquality.conf file to /etc/security
+    ansible.builtin.copy:
+      src: files/pwquality.conf
+      dest: /etc/security
+      mode: "0644"
+  
+  handlers: 
+  - name: Reselect
+    ansible.builtin.command: /bin/authselect select custom/nslcd --force
+    ansible.builtin.shell:
+      cmd: /bin/authselect test custom/nslcd | /usr/bin/grep remember
+    ansible.builtin.service:
+      name: nslcd
+      state: restarted
