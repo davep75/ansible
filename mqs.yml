@@ -1,0 +1,46 @@
+---
+- hosts: mqs
+  gather_facts: true
+  tasks:
+    - name: Add group for mqs 
+      ansible.builtin.group:
+        name: mqs
+        gid: 500
+    - name: Add account for mqs 
+      ansible.builtin.user:
+        name: mqs
+        uid: 500
+        group: mqs
+        password: "$1$XlAxNeYk$2yioJjgYxxgpWKtDGiGOt1"
+        comment: "" 
+        home: /home/mqs
+        state: present
+    - name: Add group for mqsftp 
+      ansible.builtin.group:
+        name: mqsftp
+        gid: 1236
+    - name: Add account for mqsftp 
+      ansible.builtin.user:
+        name: mqsftp
+        uid: 1236
+        group: mqsftp
+        password: "$1$HHLU2uAx$3mUMZAaBffSTymiMTj11X1"
+        comment: "MQSFTP service acccount - Jim Walsh"
+        home: /home/mqsftp
+        state: present
+    - name: Add group for dba
+      ansible.builtin.group:
+        name: dba
+        gid: 20047
+    - name: Add group for oinstall
+      ansible.builtin.group:
+        name: oinstall
+        gid: 20048
+    - name: Add account for oracle 
+      ansible.builtin.user:
+        name: oracle
+        uid: 35071
+        groups: oinstall,dba
+        comment: "Oracle Service Account"
+        home: /home/oracle
+        state: present
