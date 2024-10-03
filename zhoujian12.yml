@@ -1,0 +1,20 @@
+---
+- hosts: cmdb
+  become: yes
+  tasks:
+    - name: ensure infomgr group exists
+      group:
+       name: zhoujian12
+       gid: 35757
+       state: present
+    - name: create account for Jian Zhou (Jian12)
+
+      user:
+       name: zhoujian12
+       uid: 35757
+       group: 35757
+       comment: Jian Zhou
+       home: /home/zhoujian12
+       shell: /bin/bash
+ #     shell: /usr/sbin/adduser -m  -u 35757 -g 35757 zhoujian12
+      when: ansible_facts['distribution'] == "CentOS"
