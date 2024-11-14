@@ -1,6 +1,6 @@
 ---
 - name: create discovery account
-  hosts: openstack
+  hosts: sndisco
   tasks:
   - name: ensure sndisco group exists
     group:
