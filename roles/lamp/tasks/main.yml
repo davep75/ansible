@@ -23,7 +23,7 @@
     service: name=mariadb state=started
 
   - name: Update MySQL root password
-    mysql_user:
+    community.mysql.mysql_user:
       name: root
       host: localhost
       password: s1rdhn
