@@ -1,0 +1,7 @@
+# This file is deplpoyed by ansible.
+User_Alias     IAASADMINS2 = aty010,tjyang,zhongyu,podolske,aroquena
+User_Alias     SECURITY    = timhahn,tim,bskrbec,nexpose,dkrel,wlth09
+Cmnd_Alias     SUDOSH2     = /usr/bin/sudosh
+
+IAASADMINS2     ALL        = NOPASSWD: SUDOSH2
+SECURITY        ALL        = NOPASSWD: SUDOSH2

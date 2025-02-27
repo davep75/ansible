@@ -1,0 +1,42 @@
+---
+- hosts: splunk
+  vars:
+    myfile: "{{ /tmp/splunk.txt }}"
+  tasks:
+    - name: Add group for splunk
+      ansible.builtin.group:
+        name: splunk
+        gid: 35608
+    - name: Add account for autosec
+      ansible.builtin.user:
+        name: autosec
+        uid: 35211
+        group: splunk
+        comment: "Security Team autosec"
+        home: /home/autosec
+        state: present
+    - name: Add group for wlth09
+      ansible.builtin.group:
+        name: wlth09
+        gid: 20275
+    - name: Add account for wlth09
+      ansible.builtin.user:
+        name: wlth09
+        uid: 35564
+        group: wlth09
+        comment: "Security Team Tim Hahn"
+        home: /home/wlth09
+        state: present
+#    - name: Add group for varunp
+#      ansible.builtin.group:
+#        name: varunp
+#        gid: 35675
+#    - name: Add account for varunp
+#      ansible.builtin.user:
+#        name: varunp
+#        uid: 35675
+#        group: varunp
+#        comment: "Varun Patel"
+#        home: /home/varunp
+#        state: present
+#

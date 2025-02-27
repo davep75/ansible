@@ -1,0 +1,35 @@
+---
+- hosts: splunk
+  vars:
+    myfile: "{{ /tmp/splunk.txt }}"
+  tasks:
+    - name: copy layout to server
+      blockinfile:
+        path: /tmp/splunk.txt
+        create: yes
+        owner: podolske
+        mode: 0644
+        block: |
+          device: /dev/vdc
+          unit: sectors
+          /dev/vdc1 : start=        2048, size=  3145725952, type=83
+
+    - name: format disk according to layout (Rocky)
+      shell: /usr/sbin/sfdisk /dev/vdc < /tmp/splunk.txt
+      when: ansible_facts['distribution'] == "Rocky"
+    - name: add disk to LVM
+      shell: /usr/sbin/pvcreate /dev/vdc1
+      when: ansible_facts['distribution'] == "Rocky"
+    - name: extend LVM volume group
+      shell: /usr/sbin/vgextend data /dev/vdc1
+      when: ansible_facts['distribution'] == "Rocky"
+    - name: extend LVM logical volume 
+      shell: /usr/sbin/lvextend -l +383999 /dev/data/opt
+      when: ansible_facts['distribution'] == "Rocky"
+    - name: resize filesystem
+      shell: /usr/sbin/resize2fs /dev/data/opt
+      when: ansible_facts['distribution'] == "Rocky"
+    - name: sanity check filesystem
+      shell: /bin/df -h
+      register: df
+    - debug: var=df.stdout_lines
