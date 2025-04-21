@@ -2,8 +2,9 @@
 ---
     - name: Set permissive selinux
       command: /usr/sbin/setenforce 0
+      when: ansible_facts['distribution'] == "Rocky"
     - name: Set hostname
-      command: hostnamectl set-hostname ilmldave01
+      command: hostnamectl set-hostname {{ hostname }}
     - name: Local Timezone
       command: timedatectl set-timezone America/Chicago
     - name: comment pool line in /etc/chrony.conf
@@ -36,3 +37,4 @@
         name: firewalld
         state: stopped
         enabled: false
+      when: ansible_facts['distribution'] == "Rocky"
