@@ -1,6 +1,8 @@
 ---
 - name: Provision podolske-motbuntu01 
   hosts: motbuntu
+  vars: 
+    hostname: "{{ hostname }}"
   gather_facts: true
   roles:
     - motbuntu
