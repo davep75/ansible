@@ -1,0 +1,66 @@
+---
+ - name: Rename aty010 to podolske
+#   become: true
+   hosts: splunk
+   gather_facts: true
+   tasks:
+     - name: Replace beginning of group
+       lineinfile:
+         path: /etc/group
+         regexp: '^aty010:'
+         line: 'podolske:'
+         backup: yes
+#      when: ansible_facts['distribution'] == "Rocky"
+     - name: Replace beginning of passwd
+       lineinfile:
+         path: /etc/passwd
+         regexp: '^aty010:'
+         line: 'podolske:'
+         backup: yes
+#      when: ansible_facts['distribution'] == "Rocky"
+     - name: Replace home of passwd
+       lineinfile:
+         path: /etc/passwd
+         regexp: '/home/aty010:'
+         line: '/home/podolske:'
+         backup: yes
+#      when: ansible_facts['distribution'] == "Rocky"
+     - name: Replace shell of passwd
+       lineinfile:
+         path: /etc/passwd
+         regexp: '/sbin/nologin$'
+         line: '/bin/bash$:'
+         backup: yes
+#      when: ansible_facts['distribution'] == "Rocky"
+     - name: Replace beginning of shadow
+       lineinfile:
+         path: /etc/shadow
+         regexp: '^aty010:'
+         line: 'podolske:'
+         backup: yes
+#      when: ansible_facts['distribution'] == "Rocky"
+#     - name: Edit RedHat config
+#       lineinfile:
+#         path: /etc/chrony.conf
+#         insertafter: '#pool'
+#         line: 'server ntp1.mot.com'
+#       notify: restart_chronyd
+#       when: ansible_facts['distribution'] == "RedHat"
+#
+#
+#     - name: Install Ubuntu chrony package
+#       apt:
+#         name: chrony
+#         state: latest
+#       when: ansible_distribution == "Ubuntu"
+#
+#     - name: Copy /etc/chrony/chrony.conf
+#       copy:
+#         src: files/chrony.conf
+#         dest: /etc/chrony/chrony.conf
+#         owner: root
+#         group: root
+#         mode: 0644
+#       notify: restart_chrony
+#       when: ansible_distribution == "Ubuntu"
+
