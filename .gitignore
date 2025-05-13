@@ -5,6 +5,7 @@ ansible.log
 dba
 distro.old
 distro.txt
+files/
 hosts
 id_rsa
 id_rsa.pub
