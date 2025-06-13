@@ -4,7 +4,7 @@
         name: podolske
         uid: 18480
         password: "{{ podolske_encrypted_pass }}"
-        group: wheel
+        group: users
         comment: "Dave Podolske"
         home: /home/podolske
         state: present
