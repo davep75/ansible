@@ -5,20 +5,22 @@
       when: ansible_facts['distribution'] == "Rocky"
     - name: Set hostname
       command: hostnamectl set-hostname {{ hostname }}
+      when: ansible_facts['distribution'] == "Rocky"
     - name: Local Timezone
       command: timedatectl set-timezone America/Chicago
-    - name: comment pool line in /etc/chrony.conf
-      replace:
-        path: /etc/chrony.conf
-        regexp: '(^pool*)'
-        replace: '#\1'
-
-    - name: Add ntp1 to chrony.conf
-      lineinfile:
-        path: /etc/chrony.conf
-        insertafter: '#pool'
-        line: 'server ntp1.mot.com'
-      notify: restart_chronyd
+      when: ansible_facts['distribution'] == "Rocky"
+#    - name: comment pool line in /etc/chrony.conf
+#      replace:
+#        path: /etc/chrony.conf
+#        regexp: '(^pool*)'
+#        replace: '#\1'
+#
+#    - name: Add ntp1 to chrony.conf
+#      lineinfile:
+#        path: /etc/chrony.conf
+#        insertafter: '#pool'
+#        line: 'server ntp1.mot.com'
+#      notify: restart_chronyd
 
     - name: root account password 
       ansible.builtin.user:
@@ -26,7 +28,7 @@
         password: "$6$c3d/J5uL4lUiPDYU$UPeYw099g7BpZR4/MXa3vF58OO/d8KDjuJkcViwZa34S1qYNqQ6N6PcmHkBUkh8IyhWQFp3pn72aV7fV5AVUh."
         group: root
         state: present
-      when: ansible_facts['distribution'] == "Rocky"
+      #when: ansible_facts['distribution'] == "Rocky"
  
     - name: liveuser account lock 
       ansible.builtin.user:
