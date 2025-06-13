@@ -1,10 +1,17 @@
 ---
 - hosts: coresite
+  gather_facts: true
   become: yes
   tasks:
+    - name: create group for renaldo (Ubuntu)
+      shell: /usr/sbin/addgroup  --gid 100  renaldo
+      when: ansible_facts['distribution'] == "Ubuntu"
     - name: create account for renaldo (Ubuntu)
       shell: /usr/sbin/adduser  --uid 18480 --gid 100 --gecos renaldo --disabled-password renaldo
       when: ansible_facts['distribution'] == "Ubuntu"
+    - name: create group for renaldo (Rocky)
+      shell: /usr/sbin/groupadd -g 10 renaldo
+      when: ansible_facts['distribution'] == "Rocky"
     - name: create account for renaldo (Rocky)
       shell: /usr/sbin/useradd -m -u 18481 -g 10 renaldo
       when: ansible_facts['distribution'] == "Rocky"
