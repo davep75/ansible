@@ -1,0 +1,25 @@
+---
+- hosts: layer7
+  become: yes
+  gather_facts: true
+  tasks:
+    - name: create group for seethi (Ubuntu)
+      shell: /usr/sbin/addgroup --gid 35742 seethi
+      when: ansible_facts['os_family'] == "Debian"
+    - name: create account for seethi (Ubuntu)
+      shell: /usr/sbin/adduser  --uid 35742 --gid 35742 --gecos Seethireddygari  --disabled-password seethi
+      when: ansible_facts['os_family'] == "Debian"
+#    - name: create account for seethi (Rocky)
+#      shell: /usr/sbin/useradd -m -u 35742 -g 35742 seethi
+#      when: ansible_facts['os_fullname'] == "Rocky"
+#    - name: create account for seethi (CentOS)
+#      shell: /usr/sbin/useradd -m -u 35742 -g 35742 seethi
+#      when: ansible_facts['os_fullname'] == "CentOS"
+
+
+#    - name: remove account for seethi (Linux)
+#      ansible.builtin.user:
+#        name: seethi
+#        uid: 35742
+#        remove: yes
+#        state: absent
