@@ -1,0 +1,28 @@
+---
+- hosts: dba
+  become: yes
+  gather_facts: true
+  tasks:
+    - name: create group for a_dbss (Ubuntu)
+      shell: /usr/sbin/addgroup --gid 4008 a_dbss
+      when: ansible_facts['os_family'] == "Debian"
+    - name: create account for dbss (Ubuntu)
+      shell: /usr/sbin/adduser  --uid 4008 --gid 4008 --disabled-password a_dbss
+      when: ansible_facts['os_family'] == "Debian"
+    - name: create group for a_dbss (Rocky/RHEL)
+      shell: /usr/sbin/groupadd --gid 4008 a_dbss
+      when: ansible_facts['os_family'] == "RedHat"
+    - name: create account for a_dbss (Rocky/RHEL)
+      shell: /usr/sbin/useradd -m -u 4008 -g 4008 a_dbss
+      when: ansible_facts['os_family'] == "RedHat"
+#    - name: create account for a_dbss (CentOS)
+#      shell: /usr/sbin/useradd -m -u 4008 -g 4008 a_dbss
+#      when: ansible_facts['os_family'] == "CentOS"
+
+
+#    - name: remove account for seethi (Linux)
+#      ansible.builtin.user:
+#        name: seethi
+#        uid: 35742
+#        remove: yes
+#        state: absent
